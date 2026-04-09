@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: 77bbf71977b810f40973d57a32e5ef5c
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2214
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3522fb5797bbced438a28e75828143e7
+      internalID: -1954237991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_1
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 2215
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79b5acf04fb4fcd4ab71273372e485f2
+      internalID: -1136740110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_2
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 2214
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c04663cdfe9ab8b47953f148a760e9a4
+      internalID: -1928237126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_3
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 2214
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88dbb570b29e6314eb7a5d140cca6556
+      internalID: 889478981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_4
+      rect:
+        serializedVersion: 2
+        x: 1058
+        y: 2214
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ad8ff5c635fd3948a8b939b2c9c134a
+      internalID: -1569788440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_5
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1982
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c752dc43bc76ef4ebbd41e8819dadef
+      internalID: 631983949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_6
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 1982
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b56593ead3a7f0c489f10f99f6b0c908
+      internalID: -1832656427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_7
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 1982
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e65a37b6a2dd9b41a57fafc258f6684
+      internalID: 270145787
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_8
+      rect:
+        serializedVersion: 2
+        x: 1058
+        y: 1982
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa850f1dc15b06f479dc9a96c735d0d3
+      internalID: 233869672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_9
+      rect:
+        serializedVersion: 2
+        x: 794
+        y: 1982
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 957313721fc7aa046a99e8854f0d3af5
+      internalID: -1859937746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_10
+      rect:
+        serializedVersion: 2
+        x: 1058
+        y: 1750
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff94907655750f14dbc1099cf6be7789
+      internalID: -1198862632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_11
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1750
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a772f33186086cb43a9a32236be44cf7
+      internalID: 1506755403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_12
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 1750
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1f12d3a6c3f3334e8c9cffc5c54ec1c
+      internalID: 1789886998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_13
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 1750
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e64623577ccc28041940228dfc8d8a18
+      internalID: 859119955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_14
+      rect:
+        serializedVersion: 2
+        x: 793
+        y: 1750
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5aaa00da6b2695543ae7518ea64a6b37
+      internalID: -1650670910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_15
+      rect:
+        serializedVersion: 2
+        x: 1058
+        y: 1518
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41a8d28c45609b24b86b2eb19cb0141b
+      internalID: 63747734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_16
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1518
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cfb80471739401c449a8b9a60f19c4ff
+      internalID: 1038457311
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_17
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 1518
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 817a4ec0415db5645bdade221d9129bc
+      internalID: -712010332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_18
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 1518
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7626161993d11d044a70db2db4df0045
+      internalID: -1543934099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_19
+      rect:
+        serializedVersion: 2
+        x: 793
+        y: 1518
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f146d03a0f9368498db2b2b50d6c887
+      internalID: 1075508853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_20
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 1286
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 347aba696f8fd414a82e4f27dd896194
+      internalID: 566139830
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Miscellaneous - Encounter Swirls_21
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1286
+        width: 250
+        height: 220
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92c25e58972fd0d4f9478bd54c34ba08
+      internalID: 576812099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_0: -1954237991
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_1: -1136740110
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_10: -1198862632
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_11: 1506755403
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_12: 1789886998
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_13: 859119955
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_14: -1650670910
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_15: 63747734
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_16: 1038457311
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_17: -712010332
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_18: -1543934099
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_19: 1075508853
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_2: -1928237126
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_20: 566139830
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_21: 576812099
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_3: 889478981
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_4: -1569788440
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_5: 631983949
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_6: -1832656427
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_7: 270145787
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_8: 233869672
+      SNES - EarthBound - Miscellaneous - Encounter Swirls_9: -1859937746
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

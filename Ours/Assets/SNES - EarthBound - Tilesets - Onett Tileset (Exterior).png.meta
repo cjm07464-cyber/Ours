@@ -1,0 +1,2309 @@
+fileFormatVersion: 2
+guid: 4c606baa3e8302444a6c1d9bc7e943bc
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_0
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95f3408836b47954fb7858fdc61d40d4
+      internalID: 208891569
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_1
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e95222c88c489634d84d75f49cb05429
+      internalID: -1368582666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_2
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e12c14c939830244eb1e28082928161a
+      internalID: 2123630449
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_3
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 286d4cf7813f6c0408d8a31bf2dcbaac
+      internalID: -1122081411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_4
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2502511afb4667440807c7f0851022e7
+      internalID: 1590345605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_5
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a578ccaa4cae58744b699f0c4bda1b42
+      internalID: -1046046634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_6
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46b3ba66ae352ae459c271ad9e5246ba
+      internalID: 1742158270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_7
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0d0043d9fb8f54c4290f679e23cf90b7
+      internalID: 452496655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_8
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1241
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f2e93d496bc73164aa8cb143e57845d1
+      internalID: 617658593
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_9
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67ba46468bcf41d418b76e5415e4c636
+      internalID: 1565038354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_10
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ce4ae8c95100b894faa2a7eaba3c74bc
+      internalID: 826059801
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_11
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 07019a3e206c5ed43a7c94efeaebcd5d
+      internalID: -1315670853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_12
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d830f1f94c52d904fba91c739ec604c3
+      internalID: -339297833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_13
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6f665d294595d70448881d712e575186
+      internalID: 148364684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_14
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c01d31f9329ec7343b19eb1360783e12
+      internalID: -2019342714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_15
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b00f81bd68df81943907f4066f847023
+      internalID: 2096266328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_16
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99c2bf62eb495e24c8c59918a74dd4dd
+      internalID: 2095201261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_17
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 63b776fc659017e40947e7d8d48d878f
+      internalID: -323302859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_18
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d0944d707933334fb3830ca1857e9bf
+      internalID: 1216279275
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_19
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01405986463ffbb4497a5ef394cc309b
+      internalID: -927509063
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_20
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f0698842c47d07d44b9f83440885e653
+      internalID: -125362293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_21
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20159e74cb68fd34abac3e3586d94bd2
+      internalID: -1340001108
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_22
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 388629219a8837b45a86117feff0537e
+      internalID: 2001179913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_23
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b3ace5ae46a70ee4da347d038efff9d7
+      internalID: -124988382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_24
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1208
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06b7db3b91074a2419f83560706106f3
+      internalID: 1570616099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_25
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 20b9eea25bdd0ed4196ea2fffdcabd00
+      internalID: 444819349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_26
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7ddbf9ee7c59814ebcc740b3d45fe86
+      internalID: 1674946168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_27
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 56e05481398647940a269e3fbe68510a
+      internalID: 1424882889
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_28
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4a2e52c74beb414f87f9fc32b0e3fea
+      internalID: -2126570044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_29
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b4b055261d202004b8e48bcb92401451
+      internalID: 51556992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_30
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3004757fa85fdc84fb5d8b06b2e9f9a7
+      internalID: 347013077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_31
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2110df07fc333f14895910053cf8de32
+      internalID: -240900890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_32
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b297dc0831c7bcf459eea4c0fe3f3edb
+      internalID: 2106478890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_33
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fc26f5ed7cad9b469f1c37a71f54219
+      internalID: -1411400018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_34
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4af7ea40fa16c254b93543ad0666c8dc
+      internalID: 233810484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_35
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4e364d5c21ab84d47bdc2d044286699d
+      internalID: -901630079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_36
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 459e95c610db5be4eb52c561e577e551
+      internalID: -786069651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_37
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8b7521c441049164b87ea20b7afc234c
+      internalID: 1187510092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_38
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ad3aacb729b0a841be27828cd8f8288
+      internalID: 517313128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_39
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1175
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6b2dd19ecb2a559408684312ccb6e66b
+      internalID: -381874530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_40
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9a0ba33068d29e749ba5ea5cf00c8761
+      internalID: 1669312761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_41
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1f906009471cfdd4fbdea3cc7aec52bc
+      internalID: -990359515
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_42
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d6aafcf370eaba439dad3421438a317
+      internalID: -529791288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_43
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 01769f3a8506e50458e71c82716b39f0
+      internalID: -1809128930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_44
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 580bd01f2e628f646a7c9d9e7b06c0fc
+      internalID: 1741262298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_45
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9e47705f69cde7c4c9868cdab4024587
+      internalID: -547410828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_46
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d64660efa30f69049aa093335c3f5987
+      internalID: 408535907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_47
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 13fc2889175cafb4ca6a750da880487f
+      internalID: 317623930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_48
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b095cf4f1886d4f43b44ee5c97a8e401
+      internalID: 1715312184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_49
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c24ced4894d09d641825da3ea5355c13
+      internalID: 244697962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_50
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9c0761e014e249443b2fe060230111f6
+      internalID: -275114407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_51
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a9f660d23dae5eb4ea5a36bc482cc539
+      internalID: -604531261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_52
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b4feba4dc4fd2041a3039319378d94b
+      internalID: 1095440816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_53
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1bbe362ebbb8a4a4bbaed5ff6c1b2089
+      internalID: 2080496247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_54
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 585f00dfdeba81d46957aec89b4d6f8f
+      internalID: 1676924059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_55
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 131b28056083d4e4995c01aa64ed112a
+      internalID: -76976344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_56
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1142
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 47990f38d3d26524d833bcd24a15ee3a
+      internalID: -1081006132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_57
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae57a4b28ac2b234fab9353dba3bb499
+      internalID: 860742818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_58
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0a8ee41fec09cc4181d3551d05f9e2a
+      internalID: 429882080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_59
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1473a2872cff3d4d853b636a76ff47f
+      internalID: 424465882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_60
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67bccfe807e36004f8cac07b038c7403
+      internalID: 1623679445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_61
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 910a3219b5dd46047842b652b5d5c17a
+      internalID: 1836131670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_62
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b6d2a5d4f1ab1845a5851a6e9a4c425
+      internalID: -48909393
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_63
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f56111940f4d545479b3aa5efb6aacf9
+      internalID: 11029679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_64
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9d19d53a077dab445aed9fb210f1adc3
+      internalID: 613566021
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_65
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3c9479c89905e40429050fccd7984a66
+      internalID: 408644249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_66
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5b35637061c3b054d9f1281c3c57e61b
+      internalID: -643245587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_67
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fbd5c8ad18bb7cf498bb88759d79b841
+      internalID: 554095614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_68
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 657d0423c12ab8245890f0fcaf35be88
+      internalID: 656657705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_69
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 431bf2f0c9015474a87ab6e77c6b4f59
+      internalID: 1303753197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_70
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e67aad3533324f64fae6054228087ea6
+      internalID: 56737652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_71
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7547573c3893e634d89a8e3d354242dc
+      internalID: 1617611474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_72
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f1d064f4f7dcfbd4eb24f8be50bd770e
+      internalID: 2026101471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_73
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1109
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0f5b31f5f48574d4f8f121f3cef37a7d
+      internalID: 410215840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_74
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86fdfdebcbc70534a9e7faa90d928ac6
+      internalID: 327179318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_75
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0c5c9697b64bf274cb6441252a1dc85f
+      internalID: 1358121301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_76
+      rect:
+        serializedVersion: 2
+        x: 468
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0239d760b53b59f4d9d75ef0522f1e8c
+      internalID: -88362465
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_77
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 356cad42125225f40ba1dc6c9d013a77
+      internalID: 730816655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_78
+      rect:
+        serializedVersion: 2
+        x: 402
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cd1180d41e0b024abf09e5000b7a83d
+      internalID: 41570908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_79
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 24df4ff1072409c41812cda976a2827a
+      internalID: 1034080672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_80
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 65492cf7ed1fe0940818c85384a57642
+      internalID: 1149208904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_81
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aa845cd20b99913478197c0684b90972
+      internalID: 957139521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_82
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52575a9486231fa4ca4e7a8edbf27d85
+      internalID: -1743284040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_83
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e7e877068d7599418f70125f539fe58
+      internalID: 61537322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_84
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: daf056916013b8048b82cc41b3c49d98
+      internalID: 1704644420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_85
+      rect:
+        serializedVersion: 2
+        x: 171
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 83f4ca62bcd099149b173e82f682dc13
+      internalID: -2126141671
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_86
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f336b0f75667a724286695a7c7f71e44
+      internalID: 479962832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_87
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12abd01e391aa0b40b4e3b4cd7148b93
+      internalID: 820480355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_88
+      rect:
+        serializedVersion: 2
+        x: 72
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f8127fb5e7f9f44583ac53fc5d69b92
+      internalID: -1872453461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_89
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e5d39a399b28ab4ea7336849472865b
+      internalID: -284792228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_90
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c1e114c6483ff04e9fd33b4b56891c5
+      internalID: 1540877363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_91
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1076
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86b7cf19e488ac64aadfb4bb7f268306
+      internalID: 1140916067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_92
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1010
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 116552efc156cda4b8a0adf1c1fad6b5
+      internalID: -1922697070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_93
+      rect:
+        serializedVersion: 2
+        x: 39
+        y: 1010
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 309cef95bbf853c40be224018d44bd43
+      internalID: 1830925556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_94
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 1043
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3b1af57d65c1fe34788d960fc38a3959
+      internalID: 153806462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_95
+      rect:
+        serializedVersion: 2
+        x: 303
+        y: 1043
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c579741dd23ba964693f8c0d61966b09
+      internalID: -4670391
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_96
+      rect:
+        serializedVersion: 2
+        x: 336
+        y: 1043
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fd1b3a7c47dac6043a50ba040610bc73
+      internalID: -2025489128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_97
+      rect:
+        serializedVersion: 2
+        x: 369
+        y: 1043
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 40037f8b0788a764ea042df43e17c750
+      internalID: 1966597361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_0: 208891569
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_1: -1368582666
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_10: 826059801
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_11: -1315670853
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_12: -339297833
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_13: 148364684
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_14: -2019342714
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_15: 2096266328
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_16: 2095201261
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_17: -323302859
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_18: 1216279275
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_19: -927509063
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_2: 2123630449
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_20: -125362293
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_21: -1340001108
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_22: 2001179913
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_23: -124988382
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_24: 1570616099
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_25: 444819349
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_26: 1674946168
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_27: 1424882889
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_28: -2126570044
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_29: 51556992
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_3: -1122081411
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_30: 347013077
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_31: -240900890
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_32: 2106478890
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_33: -1411400018
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_34: 233810484
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_35: -901630079
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_36: -786069651
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_37: 1187510092
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_38: 517313128
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_39: -381874530
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_4: 1590345605
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_40: 1669312761
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_41: -990359515
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_42: -529791288
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_43: -1809128930
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_44: 1741262298
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_45: -547410828
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_46: 408535907
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_47: 317623930
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_48: 1715312184
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_49: 244697962
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_5: -1046046634
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_50: -275114407
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_51: -604531261
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_52: 1095440816
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_53: 2080496247
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_54: 1676924059
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_55: -76976344
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_56: -1081006132
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_57: 860742818
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_58: 429882080
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_59: 424465882
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_6: 1742158270
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_60: 1623679445
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_61: 1836131670
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_62: -48909393
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_63: 11029679
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_64: 613566021
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_65: 408644249
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_66: -643245587
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_67: 554095614
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_68: 656657705
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_69: 1303753197
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_7: 452496655
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_70: 56737652
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_71: 1617611474
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_72: 2026101471
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_73: 410215840
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_74: 327179318
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_75: 1358121301
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_76: -88362465
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_77: 730816655
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_78: 41570908
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_79: 1034080672
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_8: 617658593
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_80: 1149208904
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_81: 957139521
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_82: -1743284040
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_83: 61537322
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_84: 1704644420
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_85: -2126141671
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_86: 479962832
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_87: 820480355
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_88: -1872453461
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_89: -284792228
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_9: 1565038354
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_90: 1540877363
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_91: 1140916067
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_92: -1922697070
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_93: 1830925556
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_94: 153806462
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_95: -4670391
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_96: -2025489128
+      SNES - EarthBound - Tilesets - Onett Tileset (Exterior)_97: 1966597361
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

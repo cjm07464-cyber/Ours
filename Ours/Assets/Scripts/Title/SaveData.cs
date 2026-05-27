@@ -15,6 +15,7 @@ public class SaveData
 
     public int attack;      // 공격력
     public int defense;     // 방어력
+    public int gold;        // 소지 골드
 
     public string currentSceneName;     // 진행복구용 현재씬이름
 

@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public int exp;
     public int attack;
     public int defense;
+    public int gold;
 
     public string currentSceneName;
     public Vector2 playerPosition;
@@ -43,6 +44,7 @@ public class GameManager : MonoBehaviour
 
         attack = 5;
         defense = 2;
+        gold = 0;
 
         currentSceneName = "MainScene";
         playerPosition = Vector2.zero;
@@ -62,6 +64,7 @@ public class GameManager : MonoBehaviour
         data.exp = exp;
         data.attack = attack;
         data.defense = defense;
+        data.gold = gold;
 
         data.currentSceneName = currentSceneName;
 
@@ -82,6 +85,7 @@ public class GameManager : MonoBehaviour
         exp = data.exp;
         attack = data.attack;
         defense = data.defense;
+        gold = data.gold;
 
         currentSceneName = data.currentSceneName;
         playerPosition = new Vector2(data.playerPosX, data.playerPosY);

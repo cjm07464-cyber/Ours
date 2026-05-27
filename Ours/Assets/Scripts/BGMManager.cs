@@ -25,6 +25,21 @@ public class BGMManager : MonoBehaviour
         audioSrc.Stop();
     }
 
+    public void StopAndDestroy()
+    {
+        if (audioSrc != null)
+        {
+            audioSrc.Stop();
+        }
+
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+
+        Destroy(gameObject);
+    }
+
     public void FadeOut(float speed = 1.5f)
     {
         StartCoroutine(FadeOutRoutine(speed));

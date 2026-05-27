@@ -20,6 +20,7 @@ public class MainMenuManager : MonoBehaviour
     private RectTransform cursorRect;
     private TextMeshProUGUI descriptionText;
 
+    private TMP_FontAsset menuFont;
     private readonly string[] menuItems = { "스탯", "가방", "저장하기", "게임종료" };
     private readonly string[] menuDescriptions =
     {
@@ -36,10 +37,22 @@ public class MainMenuManager : MonoBehaviour
     private float cursorStepY = 36f;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void AutoCreate()
+    private static void RegisterSceneLoaded()
     {
-        Scene activeScene = SceneManager.GetActiveScene();
-        if (activeScene.name != MainSceneName)
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        EnsureMainMenuManager(SceneManager.GetActiveScene());
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        EnsureMainMenuManager(scene);
+    }
+
+    private static void EnsureMainMenuManager(Scene scene)
+    {
+        if (scene.name != MainSceneName)
         {
             return;
         }
@@ -73,6 +86,7 @@ public class MainMenuManager : MonoBehaviour
         }
 
         EnsureEventSystem();
+        LoadMenuFont();
         BuildRuntimeUI();
         CloseMenuImmediate();
     }
@@ -186,7 +200,7 @@ public class MainMenuManager : MonoBehaviour
         cursorRect.sizeDelta = new Vector2(50f, 50f);
 
         TextMeshProUGUI cursorText = cursor.AddComponent<TextMeshProUGUI>();
-        cursorText.text = "▶";
+        cursorText.text = ">";
         cursorText.color = Color.white;
         cursorText.fontSize = 42f;
         cursorText.alignment = TextAlignmentOptions.MidlineLeft;
@@ -233,6 +247,10 @@ public class MainMenuManager : MonoBehaviour
         rect.sizeDelta = new Vector2(480f, 60f);
 
         TextMeshProUGUI text = textObject.AddComponent<TextMeshProUGUI>();
+        if (menuFont != null)
+        {
+            text.font = menuFont;
+        }
         text.text = value;
         text.color = Color.white;
         text.fontSize = 42f;
@@ -310,9 +328,12 @@ public class MainMenuManager : MonoBehaviour
             commandTexts[i].color = Color.white;
         }
 
-        if (cursorRect != null)
+        if (cursorRect != null && commandTexts[selectedIndex] != null)
         {
-            cursorRect.anchoredPosition = new Vector2(30f, -30f - (cursorStepY * selectedIndex));
+            Vector2 targetPos = commandTexts[selectedIndex].rectTransform.anchoredPosition;
+
+            // 메뉴 글자보다 살짝 왼쪽에 커서를 둔다.
+            cursorRect.anchoredPosition = new Vector2(targetPos.x - 42f, targetPos.y);
         }
     }
 
@@ -337,6 +358,12 @@ public class MainMenuManager : MonoBehaviour
                 break;
             case 3:
                 Time.timeScale = 1f;
+
+                if (BGMManager.Instance != null)
+                {
+                    BGMManager.Instance.StopAndDestroy();
+                }
+
                 SceneManager.LoadScene("Title");
                 break;
         }
@@ -365,17 +392,44 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
+        // 현재 씬 이름 저장
         GameManager.Instance.currentSceneName = SceneManager.GetActiveScene().name;
 
-        GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+        // Player 찾기
+        GameObject playerObject = null;
+
+        // 1순위: Player 태그
+        try
+        {
+            playerObject = GameObject.FindGameObjectWithTag("Player");
+        }
+        catch
+        {
+            // Player 태그가 아예 없을 때 예외 방지
+        }
+
+        // 2순위: 이름이 Player인 오브젝트
         if (playerObject == null)
         {
             playerObject = GameObject.Find("Player");
         }
 
+        // 3순위: PlayerController 컴포넌트 기준
+        if (playerObject == null)
+        {
+            PlayerController playerController = FindObjectOfType<PlayerController>();
+            if (playerController != null)
+            {
+                playerObject = playerController.gameObject;
+            }
+        }
+
         if (playerObject != null)
         {
-            GameManager.Instance.playerPosition = playerObject.transform.position;
+            Vector2 pos = playerObject.transform.position;
+            GameManager.Instance.playerPosition = pos;
+
+            Debug.Log($"플레이어 위치 저장: {pos}");
         }
         else
         {
@@ -402,6 +456,16 @@ public class MainMenuManager : MonoBehaviour
         if (descriptionText != null)
         {
             descriptionText.text = message;
+        }
+    }
+
+    private void LoadMenuFont()
+    {
+        menuFont = Resources.Load<TMP_FontAsset>("Fonts/HMKMMAG SDF");
+
+        if (menuFont == null)
+        {
+            Debug.LogWarning("MainMenuManager: 한글 TMP Font Asset을 찾지 못했습니다. Resources/Fonts 경로와 파일명을 확인하세요.");
         }
     }
 }

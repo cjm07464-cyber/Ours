@@ -378,10 +378,16 @@ public class MainMenuManager : MonoBehaviour
         }
 
         SetDescription(
-            $"LV {GameManager.Instance.level}\n" +
-            $"EXP {GameManager.Instance.exp}\n" +
-            $"공격력 {GameManager.Instance.attack}\n" +
-            $"방어력 {GameManager.Instance.defense}");
+        $"LV {GameManager.Instance.level}\n" +
+        $"EXP {GameManager.Instance.exp}\n" +
+        $"HP {GameManager.Instance.currentHP} / {GameManager.Instance.maxHP}\n" +
+        $"MP {GameManager.Instance.currentMP} / {GameManager.Instance.maxMP}\n" +
+        $"공격력 {GameManager.Instance.attack}\n" +
+        $"방어력 {GameManager.Instance.defense}\n" +
+        $"마법공격력 {GameManager.Instance.magicAttack}\n" +
+        $"마법방어력 {GameManager.Instance.magicDefense}\n" +
+        $"스피드 {GameManager.Instance.speed}\n" +
+        $"행운 {GameManager.Instance.luck}");
     }
 
     private void SaveCurrentGameState()

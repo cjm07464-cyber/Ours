@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
@@ -32,7 +32,8 @@ public class EnemyController : MonoBehaviour
     BattleTransitionEffect battleEffect;
     enum State { Wander, Chase }
     State state = State.Wander;
-
+    [SerializeField] private EnemyData enemyData;
+    [SerializeField] private string battleSceneName = "BattleScene";
     Vector3 originPos;
     Vector2 moveDir;
     float stateTimer;
@@ -60,6 +61,11 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f)
+        {
+            return;
+        }
+
         UpdateAnimClock();
 
         if (player != null)
@@ -147,14 +153,12 @@ public class EnemyController : MonoBehaviour
 
         isMoving = true;
 
-        Vector3 toPlayer = (player.position - transform.position);
+        Vector3 toPlayer = player.position - transform.position;
         if (toPlayer.sqrMagnitude < 0.0001f) return;
 
         moveDir = ((Vector2)toPlayer).normalized;
-        originPos = transform.position;
         Vector3 nextPos = transform.position + (Vector3)moveDir * chaseSpeed * Time.deltaTime;
 
-        // 추적하더라도 자기 활동 구역(moveRadius)은 넘지 않게 '클램프'
         float distFromOrigin = Vector3.Distance(originPos, nextPos);
         if (distFromOrigin > moveRadius)
         {
@@ -200,18 +204,31 @@ public class EnemyController : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             battleStarted = true;
-            StartBattle();
+            StartBattle(collision.transform);
         }
     }
-    void StartBattle()
+    private void StartBattle(Transform player)
     {
-        Debug.Log("StartBattle 호출됨");
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("EnemyController: GameManager가 없습니다.");
+            return;
+        }
 
+        if (enemyData == null)
+        {
+            Debug.LogError($"{gameObject.name}: EnemyData가 연결되지 않았습니다.");
+            return;
+        }
 
-        if (battleEffect != null)
-            battleEffect.Play();
-        else
-            Debug.Log("battleEffect가 null");
+        GameManager.Instance.currentBattleEnemy = enemyData;
+        GameManager.Instance.returnSceneName = SceneManager.GetActiveScene().name;
+        GameManager.Instance.returnPlayerPosition = player.position;
+
+        // 기존 PlayerLoader가 playerPosition을 쓰고 있다면 이것도 같이 저장
+        GameManager.Instance.playerPosition = player.position;
+
+        SceneManager.LoadScene(battleSceneName);
     }
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()

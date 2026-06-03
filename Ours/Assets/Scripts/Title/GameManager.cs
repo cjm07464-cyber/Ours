@@ -4,15 +4,30 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public EnemyData currentBattleEnemy;     // currentBattleEnemy = 이번 전투에서 싸울 적
+    public string returnSceneName;          //returnSceneName = 전투 끝나고 돌아갈 씬
+    public Vector2 returnPlayerPosition;    //returnPlayerPosition = 전투 끝나고 돌아갈 위치
+
 
     public string playerName;
-    public int currentHP;
-    public int maxHP;
     public int level;
-    public int exp;
+
+    public int currentHP;
+    public int currentMP;
+    public int maxHP;
+    public int maxMP;
+
     public int attack;
+    public int magicAttack;
     public int defense;
+    public int magicDefense;
+
+    public int speed;
+    public int luck;
+
+    public int exp;
     public int gold;
+
 
     public string currentSceneName;
     public Vector2 playerPosition;
@@ -36,14 +51,24 @@ public class GameManager : MonoBehaviour
     {
         playerName = newName;
 
-        maxHP = 20;
         currentHP = 20;
+        maxHP = 20;
+
+        currentMP = 10;
+        maxMP = 10;
 
         level = 1;
         exp = 0;
 
         attack = 5;
         defense = 2;
+
+        magicAttack = 4;
+        magicDefense = 2;
+
+        speed = 5;
+        luck = 3;
+
         gold = 0;
 
         currentSceneName = "MainScene";
@@ -60,10 +85,16 @@ public class GameManager : MonoBehaviour
         data.playerName = playerName;
         data.currentHP = currentHP;
         data.maxHP = maxHP;
+        data.currentMP = currentMP;
+        data.maxMP = maxMP;
         data.level = level;
         data.exp = exp;
         data.attack = attack;
         data.defense = defense;
+        data.magicAttack = magicAttack;
+        data.magicDefense = magicDefense;
+        data.speed = speed;
+        data.luck = luck;
         data.gold = gold;
 
         data.currentSceneName = currentSceneName;
@@ -81,10 +112,16 @@ public class GameManager : MonoBehaviour
         playerName = data.playerName;
         currentHP = data.currentHP;
         maxHP = data.maxHP;
+        currentMP = data.currentMP;
+        maxMP = data.maxMP;
         level = data.level;
         exp = data.exp;
         attack = data.attack;
         defense = data.defense;
+        magicAttack = data.magicAttack;
+        magicDefense = data.magicDefense;
+        speed = data.speed;
+        luck = data.luck;
         gold = data.gold;
 
         currentSceneName = data.currentSceneName;
@@ -93,4 +130,6 @@ public class GameManager : MonoBehaviour
         introPlayed = data.introPlayed;
         ratBossDefeated = data.ratBossDefeated;
     }
+
+    
 }

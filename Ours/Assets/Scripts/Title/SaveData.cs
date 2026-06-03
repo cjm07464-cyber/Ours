@@ -9,12 +9,17 @@ public class SaveData
 
     public int currentHP;   // 현재 HP
     public int maxHP;       // 최대 HP
-
+    public int currentMP;
+    public int maxMP;
     public int level;       // 현재 레벨
     public int exp;         // 현재 경험치
 
     public int attack;      // 공격력
     public int defense;     // 방어력
+    public int magicAttack;
+    public int magicDefense;
+    public int speed;
+    public int luck;
     public int gold;        // 소지 골드
 
     public string currentSceneName;     // 진행복구용 현재씬이름

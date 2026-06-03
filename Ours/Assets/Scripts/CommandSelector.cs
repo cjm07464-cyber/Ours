@@ -1,19 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CommandSelector : MonoBehaviour
 {
-    public RectTransform selector;         // 커서 오브젝트 (Image)
-    public RectTransform[] options;        // 선택지들 (Option1~6의 RectTransform)
-    public int selectedCommandIndex = 0;
-    private int currentIndex = 0;
-    private int columnCount = 3; // 한 줄에 3개 (2행 3열 구조)
+    public RectTransform selector;         // 커서 오브젝트
+    public RectTransform[] options;        // Option1~6
     public BattleManager battleManager;
-    public GameObject commandPanel;
+
+    private int currentIndex = 0;
+    private int columnCount = 3; // 2행 3열 구조
+
     void Start()
     {
+        MoveSelectorTo(currentIndex);
+    }
+
+    void OnEnable()
+    {
+        currentIndex = 0;
         MoveSelectorTo(currentIndex);
     }
 
@@ -21,62 +24,98 @@ public class CommandSelector : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            // 오른쪽으로 이동
             if ((currentIndex + 1) % columnCount != 0)
-                currentIndex = (currentIndex + 1) % options.Length;
+            {
+                currentIndex++;
+            }
 
             MoveSelectorTo(currentIndex);
         }
         else if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            // 왼쪽으로 이동
             if (currentIndex % columnCount != 0)
-                currentIndex = (currentIndex - 1 + options.Length) % options.Length;
+            {
+                currentIndex--;
+            }
 
             MoveSelectorTo(currentIndex);
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            // 아래로 이동
             int nextIndex = currentIndex + columnCount;
             if (nextIndex < options.Length)
+            {
                 currentIndex = nextIndex;
+            }
 
             MoveSelectorTo(currentIndex);
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            // 위로 이동
             int nextIndex = currentIndex - columnCount;
             if (nextIndex >= 0)
+            {
                 currentIndex = nextIndex;
+            }
 
             MoveSelectorTo(currentIndex);
         }
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            if (currentIndex == 0 || currentIndex == 3) // 공격 or 스킬
-            {
-                commandPanel.SetActive(false);
-                this.enabled = false;
+            ExecuteCurrentCommand();
+        }
+    }
 
-                // 대상 선택 시작
-                battleManager.StartCoroutine(battleManager.SelectEnemyTarget());
-            }
-            else
-            {
-                Debug.Log("이 커맨드는 아직 구현되지 않았거나 대상 선택이 필요하지 않음");
-            }
+    private void ExecuteCurrentCommand()
+    {
+        if (battleManager == null)
+        {
+            Debug.LogWarning("CommandSelector: BattleManager가 연결되지 않았습니다.");
+            return;
         }
 
+        switch (currentIndex)
+        {
+            case 0: // 공격
+                battleManager.OnAttackCommand();
+                break;
+
+            case 1: // 방어
+                Debug.Log("방어는 아직 구현되지 않았습니다.");
+                break;
+
+            case 2: // Special
+                Debug.Log("Special은 아직 구현되지 않았습니다.");
+                break;
+
+            case 3: // 스킬 = PK회복
+                battleManager.OnHealCommand();
+                break;
+
+            case 4: // 아이템
+                Debug.Log("아이템은 아직 구현되지 않았습니다.");
+                break;
+
+            case 5: // 도망
+                battleManager.OnEscapeCommand();
+                break;
+        }
     }
 
-    void MoveSelectorTo(int index)
+    private void MoveSelectorTo(int index)
     {
+        if (selector == null || options == null || options.Length == 0)
+        {
+            return;
+        }
+
+        if (index < 0 || index >= options.Length || options[index] == null)
+        {
+            return;
+        }
+
         Vector3 basePos = options[index].position;
-        selector.position = new Vector3(basePos.x - 90f, basePos.y, basePos.z); // ← 살짝 더 왼쪽으로 띄움
+        selector.position = new Vector3(basePos.x - 90f, basePos.y, basePos.z);
     }
-
-
 }

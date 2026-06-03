@@ -25,6 +25,21 @@ public class BGMManager : MonoBehaviour
         audioSrc.Stop();
     }
 
+    public void PauseBGM()
+    {
+        if (audioSrc != null && audioSrc.isPlaying)
+        {
+            audioSrc.Pause();
+        }
+    }
+
+    public void ResumeBGM()
+    {
+        if (audioSrc != null)
+        {
+            audioSrc.UnPause();
+        }
+    }
     public void StopAndDestroy()
     {
         if (audioSrc != null)
@@ -54,4 +69,7 @@ public class BGMManager : MonoBehaviour
         }
         audioSrc.Stop();
     }
+
+
+
 }

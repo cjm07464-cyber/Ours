@@ -449,6 +449,12 @@ MonoBehaviour:
   backIdle: {fileID: -1149508279, guid: aa505cc13e20a014aafba22d1a745477, type: 3}
   sideA: {fileID: -2130395690, guid: aa505cc13e20a014aafba22d1a745477, type: 3}
   sideB: {fileID: 634277801, guid: aa505cc13e20a014aafba22d1a745477, type: 3}
+  battleEffect: {fileID: 0}
+  enemyData: {fileID: 11400000, guid: 9cbea246bfc9dc54398e3d31f937a55f, type: 2}
+  battleSceneName: BattleScene
+  encounterId: Dog_01
+  escapeIgnoreSeconds: 3
+  blinkInterval: 0.15
 --- !u!61 &818071245
 BoxCollider2D:
   m_ObjectHideFlags: 0

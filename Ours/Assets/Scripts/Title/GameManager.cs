@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public string returnSceneName;          //returnSceneName = 전투 끝나고 돌아갈 씬
     public Vector2 returnPlayerPosition;    //returnPlayerPosition = 전투 끝나고 돌아갈 위치
 
+    [Header("Escape Runtime Data")]
+    public string currentBattleEnemyId; // currentBattleEnemyId = 이번 전투에서 싸울 적의 ID (EnemyData에서 가져옴)
+    public string escapedEnemyId;   // escapedEnemyId = 도망친뒤의 적의 ID (EnemyData에서 가져옴)
 
     public string playerName;
     public int level;
@@ -131,5 +134,5 @@ public class GameManager : MonoBehaviour
         ratBossDefeated = data.ratBossDefeated;
     }
 
-    
+
 }

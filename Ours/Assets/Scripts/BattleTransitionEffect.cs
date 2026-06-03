@@ -77,6 +77,13 @@ public class BattleTransitionEffect : MonoBehaviour
     {
         if (isPlaying) return;
 
+        if (frames == null || frames.Length == 0)
+        {
+            Debug.LogError("BattleTransitionEffect: frames가 비어 있습니다.");
+            FinishBattleTransition();
+            return;
+        }
+
         isPlaying = true;
         animationFinished = false;
         index = 0;
@@ -84,14 +91,17 @@ public class BattleTransitionEffect : MonoBehaviour
 
         sr.sprite = frames[0];
         sr.enabled = true;
-        // 🔥 마을 BGM 정지 (또는 페이드)
-        if (BGMManager.Instance != null)
-            BGMManager.Instance.StopBGM();
-        // 또는 FadeOut();
 
-        
+        // 마을 BGM 일시정지
+        if (BGMManager.Instance != null)
+        {
+            BGMManager.Instance.PauseBGM();
+        }
+
         if (audioSrc != null)
+        {
             audioSrc.Play();
+        }
 
         Time.timeScale = 0f;
     }

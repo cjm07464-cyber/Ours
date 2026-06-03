@@ -29,11 +29,18 @@ public class EnemyController : MonoBehaviour
     public Sprite sideA;      // 옆 프레임 A(3)
     public Sprite sideB;      // 옆 프레임 B(4)
     bool battleStarted = false;
-    BattleTransitionEffect battleEffect;
+    [SerializeField] private BattleTransitionEffect battleEffect;
     enum State { Wander, Chase }
     State state = State.Wander;
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private string battleSceneName = "BattleScene";
+
+    [Header("Encounter")]       // 필드 적마다 고유하게 넣을 고유의 값
+    [SerializeField] private string encounterId;
+    [SerializeField] private float escapeIgnoreSeconds = 3f;
+    [SerializeField] private float blinkInterval = 0.15f;
+    private Collider2D[] enemyColliders;
+    private bool encounterDisabled;
     Vector3 originPos;
     Vector2 moveDir;
     float stateTimer;
@@ -45,9 +52,11 @@ public class EnemyController : MonoBehaviour
     SpriteRenderer sr;
     Transform player;
 
+
     void Start()
     {
         originPos = transform.position;
+        enemyColliders = GetComponents<Collider2D>();
         sr = GetComponent<SpriteRenderer>();
 
         // Player 찾기 (Player 오브젝트에 Tag를 "Player"로 설정해줘)
@@ -56,12 +65,25 @@ public class EnemyController : MonoBehaviour
 
         GameObject b = GameObject.FindGameObjectWithTag("BattleEffect");
         if (b != null) battleEffect = b.GetComponent<BattleTransitionEffect>();
+        if (string.IsNullOrEmpty(encounterId))
+        {
+            encounterId = gameObject.name;
+        }
+
+        if (GameManager.Instance != null && GameManager.Instance.escapedEnemyId == encounterId)
+        {
+            StartCoroutine(EscapeIgnoreRoutine());
+        }
         SetIdle();
     }
 
     void Update()
     {
         if (Time.timeScale == 0f)
+        {
+            return;
+        }
+        if (encounterDisabled)
         {
             return;
         }
@@ -199,7 +221,7 @@ public class EnemyController : MonoBehaviour
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (battleStarted) return;
+        if (battleStarted || encounterDisabled) return;
 
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -212,23 +234,85 @@ public class EnemyController : MonoBehaviour
         if (GameManager.Instance == null)
         {
             Debug.LogError("EnemyController: GameManager가 없습니다.");
+            battleStarted = false;
             return;
         }
 
         if (enemyData == null)
         {
             Debug.LogError($"{gameObject.name}: EnemyData가 연결되지 않았습니다.");
+            battleStarted = false;
             return;
         }
 
         GameManager.Instance.currentBattleEnemy = enemyData;
         GameManager.Instance.returnSceneName = SceneManager.GetActiveScene().name;
         GameManager.Instance.returnPlayerPosition = player.position;
+        GameManager.Instance.currentBattleEnemyId = encounterId;
 
-        // 기존 PlayerLoader가 playerPosition을 쓰고 있다면 이것도 같이 저장
+        // PlayerLoader가 playerPosition을 사용하므로 같이 저장
         GameManager.Instance.playerPosition = player.position;
 
-        SceneManager.LoadScene(battleSceneName);
+        if (battleEffect != null)
+        {
+            battleEffect.battleSceneName = battleSceneName;
+            battleEffect.Play();
+        }
+        else
+        {
+            Debug.LogWarning("EnemyController: BattleTransitionEffect가 없어 바로 BattleScene으로 이동합니다.");
+            SceneManager.LoadScene(battleSceneName);
+        }
+    }
+    private IEnumerator EscapeIgnoreRoutine()
+    {
+        encounterDisabled = true;
+        battleStarted = false;
+        isMoving = false;
+
+        SetEnemyColliders(false);
+
+        float elapsed = 0f;
+
+        while (elapsed < escapeIgnoreSeconds)
+        {
+            if (sr != null)
+            {
+                sr.enabled = !sr.enabled;
+            }
+
+            yield return new WaitForSeconds(blinkInterval);
+            elapsed += blinkInterval;
+        }
+
+        if (sr != null)
+        {
+            sr.enabled = true;
+        }
+
+        SetEnemyColliders(true);
+
+        encounterDisabled = false;
+
+        if (GameManager.Instance != null && GameManager.Instance.escapedEnemyId == encounterId)
+        {
+            GameManager.Instance.escapedEnemyId = "";
+        }
+    }
+    private void SetEnemyColliders(bool enabled)
+    {
+        if (enemyColliders == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < enemyColliders.Length; i++)
+        {
+            if (enemyColliders[i] != null)
+            {
+                enemyColliders[i].enabled = enabled;
+            }
+        }
     }
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()

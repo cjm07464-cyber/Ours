@@ -34,7 +34,7 @@ public class MainMenuManager : MonoBehaviour
 
     private int selectedIndex;
     private bool isMenuOpen;
-    private float cursorStepY = 36f;
+
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void RegisterSceneLoaded()

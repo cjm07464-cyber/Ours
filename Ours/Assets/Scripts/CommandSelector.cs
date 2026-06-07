@@ -89,8 +89,8 @@ public class CommandSelector : MonoBehaviour
                 Debug.Log("Special은 아직 구현되지 않았습니다.");
                 break;
 
-            case 3: // 스킬 = PK회복
-                battleManager.OnHealCommand();
+            case 3: // 스킬
+                battleManager.OpenSkillPanel();
                 break;
 
             case 4: // 아이템

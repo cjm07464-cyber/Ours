@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,6 +22,7 @@ public class BattleManager : MonoBehaviour
     [Header("UI Panels")]
     [SerializeField] private GameObject messagePanel;
     [SerializeField] private GameObject commandPanel;
+    [SerializeField] private GameObject skillPanel;
     [SerializeField] private GameObject statusPanel;
 
     [Header("UI Images")]
@@ -41,6 +43,11 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private EnemyData testEnemyData;
     private EnemyData enemyData;
 
+    [Header("Skills")]
+    [SerializeField] private SkillSelector skillSelector;
+    [SerializeField] private SkillData pkHealSkill;
+    [SerializeField] private SkillData pkThunderSkill;
+
     [Header("Battle Settings")]
     [SerializeField] private string defaultReturnSceneName = "MainScene";
     [SerializeField] private float messageWaitSeconds = 1.0f;
@@ -58,6 +65,9 @@ public class BattleManager : MonoBehaviour
     private int selectedCommandIndex;
     private int gameOverSelectedIndex = 0; // 0 = 다시 일어서기, 1 = 그만하기
     private readonly string[] commands = { "공격", "PK회복", "도망" };
+
+    private SkillData runtimePKHealSkill;
+    private SkillData runtimePKThunderSkill;
 
     private bool inputLocked;
 
@@ -96,6 +106,7 @@ public class BattleManager : MonoBehaviour
         }
 
         SetCommandPanel(false);
+        SetSkillPanel(false);
         SetStatusPanel(false);
         SetMessagePanel(true);
 
@@ -191,6 +202,7 @@ public class BattleManager : MonoBehaviour
         selectedCommandIndex = 0;
 
         SetCommandPanel(true);
+        SetSkillPanel(false);
         SetMessagePanel(false);
         UpdateCommandText();
         RefreshPlayerStatusUI();
@@ -438,6 +450,7 @@ public class BattleManager : MonoBehaviour
         inputLocked = true;
 
         SetCommandPanel(false);
+        SetSkillPanel(false);
         SetStatusPanel(false);
         SetMessagePanel(true);
 
@@ -592,7 +605,7 @@ public class BattleManager : MonoBehaviour
 
     private bool CanUsePKHeal()
     {
-        return GameManager.Instance.level >= 2;
+        return GameManager.Instance.HasSkill(GameManager.PKHealSkillId);
     }
 
     private string AddExpAndBuildLevelUpMessage(int amount)
@@ -612,7 +625,10 @@ public class BattleManager : MonoBehaviour
 
             if (GameManager.Instance.level == 2)
             {
+                GameManager.Instance.LearnSkill(GameManager.PKHealSkillId);
+                GameManager.Instance.LearnSkill(GameManager.PKThunderSkillId);
                 message += "\nPK회복을 배웠다!";
+                message += "\nPK썬더를 배웠다!";
             }
         }
 
@@ -705,6 +721,14 @@ public class BattleManager : MonoBehaviour
         if (commandPanel != null)
         {
             commandPanel.SetActive(active);
+        }
+    }
+
+    private void SetSkillPanel(bool active)
+    {
+        if (skillPanel != null)
+        {
+            skillPanel.SetActive(active);
         }
     }
 
@@ -805,6 +829,211 @@ public class BattleManager : MonoBehaviour
         {
             StartCoroutine(EscapeRoutine());
         }
+    }
+
+    public void OpenSkillPanel()
+    {
+        if (state != BattleState.PlayerCommand || inputLocked)
+        {
+            return;
+        }
+
+        SetCommandPanel(false);
+        SetMessagePanel(false);
+        SetSkillPanel(true);
+
+        if (skillSelector != null)
+        {
+            skillSelector.SetSkills(GetLearnedBattleSkills());
+        }
+    }
+
+    public void CloseSkillPanelAndReturnToCommand()
+    {
+        if (state != BattleState.PlayerCommand || inputLocked)
+        {
+            return;
+        }
+
+        SetSkillPanel(false);
+        OpenCommandSelect();
+    }
+
+    public void OnSkillSelected(SkillData skill)
+    {
+        if (state != BattleState.PlayerCommand || inputLocked || skill == null)
+        {
+            return;
+        }
+
+        StartCoroutine(PlayerSkillRoutine(skill));
+    }
+
+    private List<SkillData> GetLearnedBattleSkills()
+    {
+        List<SkillData> skills = new List<SkillData>();
+
+        AddLearnedSkill(skills, GetPKHealSkill());
+        AddLearnedSkill(skills, GetPKThunderSkill());
+
+        return skills;
+    }
+
+    private void AddLearnedSkill(List<SkillData> skills, SkillData skill)
+    {
+        if (skill == null || GameManager.Instance == null)
+        {
+            return;
+        }
+
+        if (GameManager.Instance.HasSkill(skill.skillId))
+        {
+            skills.Add(skill);
+        }
+    }
+
+    private SkillData GetPKHealSkill()
+    {
+        if (pkHealSkill != null)
+        {
+            return pkHealSkill;
+        }
+
+        if (runtimePKHealSkill == null)
+        {
+            runtimePKHealSkill = ScriptableObject.CreateInstance<SkillData>();
+            runtimePKHealSkill.hideFlags = HideFlags.HideAndDontSave;
+            runtimePKHealSkill.skillId = GameManager.PKHealSkillId;
+            runtimePKHealSkill.skillName = "PK회복";
+            runtimePKHealSkill.description = "HP를 30 회복한다.";
+            runtimePKHealSkill.learnLevel = 2;
+            runtimePKHealSkill.mpCost = 0;
+            runtimePKHealSkill.skillType = SkillType.Heal;
+            runtimePKHealSkill.targetType = TargetType.Self;
+            runtimePKHealSkill.elementType = ElementType.None;
+            runtimePKHealSkill.power = 30;
+        }
+
+        return runtimePKHealSkill;
+    }
+
+    private SkillData GetPKThunderSkill()
+    {
+        if (pkThunderSkill != null)
+        {
+            return pkThunderSkill;
+        }
+
+        if (runtimePKThunderSkill == null)
+        {
+            runtimePKThunderSkill = ScriptableObject.CreateInstance<SkillData>();
+            runtimePKThunderSkill.hideFlags = HideFlags.HideAndDontSave;
+            runtimePKThunderSkill.skillId = GameManager.PKThunderSkillId;
+            runtimePKThunderSkill.skillName = "PK썬더";
+            runtimePKThunderSkill.description = "번개로 적 하나를 공격한다.";
+            runtimePKThunderSkill.learnLevel = 2;
+            runtimePKThunderSkill.mpCost = 4;
+            runtimePKThunderSkill.skillType = SkillType.MagicAttack;
+            runtimePKThunderSkill.targetType = TargetType.SingleEnemy;
+            runtimePKThunderSkill.elementType = ElementType.Thunder;
+            runtimePKThunderSkill.power = 0;
+        }
+
+        return runtimePKThunderSkill;
+    }
+
+    private IEnumerator PlayerSkillRoutine(SkillData skill)
+    {
+        inputLocked = true;
+        state = BattleState.PlayerAction;
+
+        SetCommandPanel(false);
+        SetSkillPanel(false);
+        SetMessagePanel(true);
+
+        if (!GameManager.Instance.HasSkill(skill.skillId))
+        {
+            messageText.text = "아직 사용할 수 없는 스킬이다.";
+            yield return WaitForConfirm();
+
+            inputLocked = false;
+            OpenCommandSelect();
+            yield break;
+        }
+
+        if (GameManager.Instance.currentMP < skill.mpCost)
+        {
+            messageText.text = "MP가 부족하다.";
+            yield return WaitForConfirm();
+
+            inputLocked = false;
+            OpenCommandSelect();
+            yield break;
+        }
+
+        if (skill.mpCost > 0)
+        {
+            GameManager.Instance.currentMP -= skill.mpCost;
+            RefreshPlayerStatusUI();
+        }
+
+        if (skill.skillId == GameManager.PKHealSkillId || skill.skillType == SkillType.Heal)
+        {
+            yield return UseHealSkillRoutine(skill);
+            yield break;
+        }
+
+        if (skill.skillId == GameManager.PKThunderSkillId || skill.elementType == ElementType.Thunder)
+        {
+            yield return UseThunderSkillRoutine(skill);
+            yield break;
+        }
+
+        messageText.text = "아직 사용할 수 없는 스킬이다.";
+        yield return WaitForConfirm();
+
+        inputLocked = false;
+        OpenCommandSelect();
+    }
+
+    private IEnumerator UseHealSkillRoutine(SkillData skill)
+    {
+        int healPower = skill.power > 0 ? skill.power : 30;
+        int beforeHP = GameManager.Instance.currentHP;
+        GameManager.Instance.currentHP = Mathf.Min(
+            GameManager.Instance.maxHP,
+            GameManager.Instance.currentHP + healPower);
+
+        int healedAmount = GameManager.Instance.currentHP - beforeHP;
+
+        RefreshPlayerStatusUI();
+
+        messageText.text = $"{skill.skillName}!\nHP를 {healedAmount} 회복했다!";
+        yield return WaitForConfirm();
+
+        yield return EnemyTurnRoutine();
+    }
+
+    private IEnumerator UseThunderSkillRoutine(SkillData skill)
+    {
+        int damage = Mathf.Max(3, GameManager.Instance.magicAttack * 2 - enemyData.magicDefense);
+
+        enemyCurrentHP -= damage;
+        if (enemyCurrentHP < 0)
+        {
+            enemyCurrentHP = 0;
+        }
+
+        messageText.text = $"{skill.skillName}!\n{enemyData.enemyName}에게 {damage}의 데미지!";
+        yield return WaitForConfirm();
+
+        if (enemyCurrentHP <= 0)
+        {
+            yield return VictoryRoutine();
+            yield break;
+        }
+
+        yield return EnemyTurnRoutine();
     }
 
     private void HandleGameOverInput()

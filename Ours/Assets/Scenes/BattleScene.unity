@@ -529,6 +529,7 @@ GameObject:
   - component: {fileID: 130708136}
   - component: {fileID: 130708138}
   - component: {fileID: 130708137}
+  - component: {fileID: 130708139}
   m_Layer: 5
   m_Name: SkillSelector
   m_TagString: Untagged
@@ -593,6 +594,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130708135}
   m_CullTransparentMesh: 0
+--- !u!114 &130708139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130708135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d5f1b53d4d24aaeb0c585e28c942d07, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  selector: {fileID: 130708136}
+  options:
+  - {fileID: 936318448}
+  - {fileID: 2130995169}
+  - {fileID: 281581864}
+  - {fileID: 64384118}
+  optionTexts:
+  - {fileID: 936318449}
+  - {fileID: 2130995170}
+  - {fileID: 281581865}
+  - {fileID: 64384119}
+  battleManager: {fileID: 512104298}
 --- !u!1 &165093401
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,6 +1582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   messagePanel: {fileID: 1213032364}
   commandPanel: {fileID: 1845835115}
+  skillPanel: {fileID: 1394594520}
   statusPanel: {fileID: 606612002}
   enemyImage: {fileID: 0}
   messageText: {fileID: 643953265}
@@ -1569,6 +1595,9 @@ MonoBehaviour:
   gameOverContinueText: {fileID: 475524687}
   gameOverQuitText: {fileID: 1119682162}
   testEnemyData: {fileID: 11400000, guid: 9cbea246bfc9dc54398e3d31f937a55f, type: 2}
+  skillSelector: {fileID: 130708139}
+  pkHealSkill: {fileID: 11400000, guid: b8a9e6d2c9fa450b8a3bf397dce0b712, type: 2}
+  pkThunderSkill: {fileID: 11400000, guid: 5f1a4d4afbb54ef299b60214fd7fa135, type: 2}
   defaultReturnSceneName: MainScene
   messageWaitSeconds: 1
   fadeImage: {fileID: 1585183351}

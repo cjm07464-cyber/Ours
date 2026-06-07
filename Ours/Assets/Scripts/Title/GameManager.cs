@@ -1,8 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class GameManager : MonoBehaviour
 {
+    public const string PKHealSkillId = "pk_heal";
+    public const string PKThunderSkillId = "pk_thunder";
+
     public static GameManager Instance;
     public EnemyData currentBattleEnemy;     // currentBattleEnemy = 이번 전투에서 싸울 적
     public string returnSceneName;          //returnSceneName = 전투 끝나고 돌아갈 씬
@@ -37,6 +41,9 @@ public class GameManager : MonoBehaviour
 
     public bool introPlayed;
     public bool ratBossDefeated;
+
+    [Header("Skills")]
+    public List<string> learnedSkillIds = new List<string>();
 
     private void Awake()
     {
@@ -79,6 +86,8 @@ public class GameManager : MonoBehaviour
 
         introPlayed = false;
         ratBossDefeated = false;
+
+        learnedSkillIds = new List<string>();
     }
 
     public SaveData GetSaveData()
@@ -107,6 +116,9 @@ public class GameManager : MonoBehaviour
 
         data.introPlayed = introPlayed;
         data.ratBossDefeated = ratBossDefeated;
+        data.learnedSkillIds = learnedSkillIds != null
+            ? new List<string>(learnedSkillIds)
+            : new List<string>();
 
         return data;
     }
@@ -132,7 +144,43 @@ public class GameManager : MonoBehaviour
 
         introPlayed = data.introPlayed;
         ratBossDefeated = data.ratBossDefeated;
+
+        learnedSkillIds = data.learnedSkillIds != null
+            ? new List<string>(data.learnedSkillIds)
+            : new List<string>();
+
+        if (level >= 2)
+        {
+            LearnSkill(PKHealSkillId);
+            LearnSkill(PKThunderSkillId);
+        }
     }
 
+    public void LearnSkill(string skillId)
+    {
+        if (string.IsNullOrEmpty(skillId))
+        {
+            return;
+        }
 
+        if (learnedSkillIds == null)
+        {
+            learnedSkillIds = new List<string>();
+        }
+
+        if (!learnedSkillIds.Contains(skillId))
+        {
+            learnedSkillIds.Add(skillId);
+        }
+    }
+
+    public bool HasSkill(string skillId)
+    {
+        if (string.IsNullOrEmpty(skillId) || learnedSkillIds == null)
+        {
+            return false;
+        }
+
+        return learnedSkillIds.Contains(skillId);
+    }
 }

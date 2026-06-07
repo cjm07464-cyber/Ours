@@ -29,4 +29,6 @@ public class SaveData
 
     public bool introPlayed;            // 인트로 플래그 여부
     public bool ratBossDefeated;        // 래트킹 처치 플래그 여부
+
+    public List<string> learnedSkillIds; // 습득한 스킬 ID 목록
 }

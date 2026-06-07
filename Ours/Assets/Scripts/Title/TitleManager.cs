@@ -203,7 +203,15 @@ public class TitleManager : MonoBehaviour
     public void OnClickContinueYes()
     {
         SaveSystem.LoadGame();
-        SceneManager.LoadScene("MainScene");
+
+        string sceneToLoad = "MainScene";
+
+        if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.currentSceneName))
+        {
+            sceneToLoad = GameManager.Instance.currentSceneName;
+        }
+
+        SceneManager.LoadScene(sceneToLoad);
     }
     public void OnClickContinueNo()
     {

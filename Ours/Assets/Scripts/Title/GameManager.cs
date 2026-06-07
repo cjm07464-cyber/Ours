@@ -54,8 +54,8 @@ public class GameManager : MonoBehaviour
     {
         playerName = newName;
 
-        currentHP = 20;
-        maxHP = 20;
+        currentHP = 24;
+        maxHP = 24;
 
         currentMP = 10;
         maxMP = 10;
@@ -63,8 +63,8 @@ public class GameManager : MonoBehaviour
         level = 1;
         exp = 0;
 
-        attack = 5;
-        defense = 2;
+        attack = 7;
+        defense = 3;
 
         magicAttack = 4;
         magicDefense = 2;

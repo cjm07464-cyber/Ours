@@ -1,24 +1,26 @@
 # SYSTEM_OVERVIEW
 
-전체 시스템 관계 요약.
-
----
-
-## 전체 흐름
+## 목표 전체 흐름
 
 ```text
-Title
-  ↓
-MainScene
+BootScene
+  ├─ 인트로 연출
+  ├─ 처음부터 → 이름 입력 → TownScene
+  ├─ 이어하기 → 저장된 씬
+  └─ 종료
+
+TownScene
   ↓ 적 접촉
 BattleTransitionEffect
   ↓
 BattleScene
-  ├─ 승리 / 도망 → MainScene
+  ├─ 승리 / 도망 → TownScene
   └─ 게임오버 → 다시 일어서기 / 그만하기
 ```
 
----
+주의:
+- 현재 프로젝트에는 기존 `Title`, `MainScene` 씬 이름이 남아 있을 수 있다.
+- 목표 명칭은 `BootScene`, `TownScene`, `BattleScene`이다.
 
 ## 주요 싱글톤 / 유지 오브젝트
 
@@ -27,19 +29,42 @@ BattleScene
 - 플레이어 상태 보관
 - 저장 데이터 반영
 - 전투 임시 데이터 보관
+- 배운 스킬 ID 목록 보관
+- 플레이어 바라보는 방향 보관
+- 전투 승리/도망 적 ID 보관
 - DontDestroyOnLoad
 
 ### BGMManager
 
-- MainScene BGM 유지
+- TownScene BGM 유지
 - 전투 진입 시 Pause
-- MainScene 복귀 시 Resume
-- Title 복귀 시 StopAndDestroy 가능
+- TownScene 복귀 시 Resume
+- BootScene/Title 복귀 시 StopAndDestroy 가능
 - DontDestroyOnLoad
 
----
+## BootScene 구성 목표
 
-## MainScene 구성
+```text
+BootScene
+├── Main Camera
+├── EventSystem
+├── BootSceneController
+├── Boot_BGM
+└── Canvas
+    ├── FadeOverlay
+    ├── IntroText
+    ├── TitleGroup
+    │   ├── EarthImage
+    │   ├── UrsText
+    │   └── MenuGroup
+    │       ├── Selector
+    │       ├── NewGameText
+    │       ├── ContinueText
+    │       └── QuitText
+    └── NameInputPanel
+```
+
+## TownScene 구성
 
 - Player
   - PlayerController
@@ -53,8 +78,8 @@ BattleScene
 - MainMenuManager
   - C키 메뉴
   - 저장 / 게임종료
-
----
+- SceneFadeIn
+  - BattleScene 복귀 시 페이드 인
 
 ## BattleScene 구성
 
@@ -65,86 +90,56 @@ BattleScene
 ├── Battle Manager
 ├── Canvas
 │   ├── BattleBG
-│   │   └── AnimatedBG
-│   │       └── Raw Image
 │   ├── EnemyLayer
-│   │   └── Enemy Image
+│   ├── EffectLayer
 │   ├── BattleUI
-│   │   ├── MessagePanel
-│   │   ├── CommandPanel
-│   │   └── StatusPanel
 │   ├── GameOverPanel
 │   └── FadePanel
-├── PlayerManager
 ├── Battle_BGM
-└── rdog
+└── 기타 임시/구 오브젝트
 ```
-
-주의:
-- `PlayerManager`는 구 구조일 가능성이 있으므로 현재 사용 여부를 확인한다.
-- 실제 전투 플레이어 상태는 `GameManager` 기준으로 관리한다.
-- `rdog`가 테스트 오브젝트라면 실제 사용 여부를 확인하고 정리한다.
-
----
-
-## BattleScene UI 렌더 순서
-
-```text
-BattleBG
-→ EnemyLayer
-→ BattleUI
-→ GameOverPanel
-→ FadePanel
-```
-
----
 
 ## 데이터 흐름
+
+### 새 게임
+
+```text
+BootScene
+→ 처음부터
+→ 이름 입력
+→ GameManager 새 데이터 초기화
+→ TownScene 로드
+```
+
+### 이어하기
+
+```text
+BootScene
+→ SaveSystem.HasSaveData()
+→ 저장 데이터 있으면 Continue 활성화
+→ SaveSystem.LoadGame()
+→ 저장된 씬 로드
+```
 
 ### 전투 진입
 
 ```text
 EnemyController
 → GameManager.currentBattleEnemy
+→ GameManager.currentBattleEnemyId
 → BattleTransitionEffect
 → BattleScene
 → BattleManager.ResolveEnemyData()
 ```
 
-### 도망
+### 스킬 사용
 
 ```text
-BattleManager.EscapeRoutine()
-→ GameManager.escapedEnemyId 저장
-→ MainScene 복귀
-→ EnemyController.EscapeIgnoreRoutine()
-```
-
-### 승리 후 리스폰 예정
-
-```text
-BattleManager.VictoryRoutine()
-→ GameManager.defeatedEnemyId 저장 예정
-→ MainScene 복귀
-→ EnemyController가 자기 encounterId와 비교
-→ 해당 적 숨김
-→ 10초 후 리스폰
-```
-
-### 저장
-
-```text
-MainMenuManager
-→ GameManager.GetSaveData()
-→ SaveSystem.SaveGame()
-→ savefile.json
-```
-
-### 불러오기
-
-```text
-SaveSystem.LoadGame()
-→ GameManager.LoadFromSaveData()
-→ SceneManager.LoadScene()
-→ PlayerLoader가 위치 적용
+CommandSelector
+→ SkillPanel 열기
+→ SkillSelector
+→ BattleManager.OnSkillSelected()
+→ SkillData 참조
+→ 필요 시 EffectLayer에 effectPrefab 생성
+→ 데미지/회복 처리
 ```

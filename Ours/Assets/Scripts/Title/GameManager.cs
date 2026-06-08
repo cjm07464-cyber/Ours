@@ -12,9 +12,11 @@ public class GameManager : MonoBehaviour
     public string returnSceneName;          //returnSceneName = 전투 끝나고 돌아갈 씬
     public Vector2 returnPlayerPosition;    //returnPlayerPosition = 전투 끝나고 돌아갈 위치
 
-    [Header("Escape Runtime Data")]
+    [Header("Battle Runtime Data")]
     public string currentBattleEnemyId; // currentBattleEnemyId = 이번 전투에서 싸울 적의 ID (EnemyData에서 가져옴)
     public string escapedEnemyId;   // escapedEnemyId = 도망친뒤의 적의 ID (EnemyData에서 가져옴)
+    public string defeatedEnemyId;
+    public bool fadeInOnMainSceneLoad;
 
     public string playerName;
     public int level;
@@ -38,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     public string currentSceneName;
     public Vector2 playerPosition;
+    public Vector2 playerFacingDirection = Vector2.down;
 
     public bool introPlayed;
     public bool ratBossDefeated;
@@ -83,6 +86,13 @@ public class GameManager : MonoBehaviour
 
         currentSceneName = "MainScene";
         playerPosition = Vector2.zero;
+        playerFacingDirection = Vector2.down;
+        currentBattleEnemy = null;
+        returnSceneName = "";
+        currentBattleEnemyId = "";
+        escapedEnemyId = "";
+        defeatedEnemyId = "";
+        fadeInOnMainSceneLoad = false;
 
         introPlayed = false;
         ratBossDefeated = false;
@@ -113,6 +123,8 @@ public class GameManager : MonoBehaviour
 
         data.playerPosX = playerPosition.x;
         data.playerPosY = playerPosition.y;
+        data.playerFacingDirX = playerFacingDirection.x;
+        data.playerFacingDirY = playerFacingDirection.y;
 
         data.introPlayed = introPlayed;
         data.ratBossDefeated = ratBossDefeated;
@@ -141,6 +153,15 @@ public class GameManager : MonoBehaviour
 
         currentSceneName = data.currentSceneName;
         playerPosition = new Vector2(data.playerPosX, data.playerPosY);
+        playerFacingDirection = new Vector2(data.playerFacingDirX, data.playerFacingDirY);
+        if (playerFacingDirection.sqrMagnitude < 0.0001f)
+        {
+            playerFacingDirection = Vector2.down;
+        }
+        else
+        {
+            playerFacingDirection.Normalize();
+        }
 
         introPlayed = data.introPlayed;
         ratBossDefeated = data.ratBossDefeated;

@@ -36,4 +36,8 @@ public class SkillData : ScriptableObject
 
     [Header("Effect")]
     public int power;
+    [Header("Visual / Sound")]
+    public GameObject effectPrefab;
+    public AudioClip sfx;
+    public float effectDuration = 1.0f;
 }

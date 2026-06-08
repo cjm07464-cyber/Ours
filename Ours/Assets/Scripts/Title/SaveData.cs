@@ -26,6 +26,8 @@ public class SaveData
 
     public float playerPosX;            // 그리고 좌표들
     public float playerPosY;
+    public float playerFacingDirX;
+    public float playerFacingDirY;
 
     public bool introPlayed;            // 인트로 플래그 여부
     public bool ratBossDefeated;        // 래트킹 처치 플래그 여부

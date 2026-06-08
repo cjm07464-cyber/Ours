@@ -47,6 +47,11 @@ public class PlayerController : MonoBehaviour
             Input.GetAxisRaw("Horizontal"),
             Input.GetAxisRaw("Vertical")
         ).normalized;
+
+        if (inputDir != Vector2.zero && GameManager.Instance != null)
+        {
+            GameManager.Instance.playerFacingDirection = inputDir;
+        }
     }
 
     void Move()
@@ -71,8 +76,35 @@ public class PlayerController : MonoBehaviour
 
     void UpdateSprite()
     {
-        float x = inputDir.x;
-        float y = inputDir.y;
+        ApplySpriteForDirection(inputDir);
+    }
+
+    public void ApplyFacingDirection(Vector2 direction)
+    {
+        if (direction.sqrMagnitude < 0.0001f)
+        {
+            direction = Vector2.down;
+        }
+
+        inputDir = direction.normalized;
+        ApplySpriteForDirection(inputDir);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.playerFacingDirection = inputDir;
+        }
+    }
+
+    private void ApplySpriteForDirection(Vector2 direction)
+    {
+        EnsureSpriteRenderer();
+        if (sr == null || direction == Vector2.zero)
+        {
+            return;
+        }
+
+        float x = direction.x;
+        float y = direction.y;
 
         // 대각선 우선
         if (Mathf.Abs(x) > 0.1f && Mathf.Abs(y) > 0.1f)
@@ -103,6 +135,14 @@ public class PlayerController : MonoBehaviour
                 sr.sprite = up;
                 sr.flipX = animToggle;
             }
+        }
+    }
+
+    private void EnsureSpriteRenderer()
+    {
+        if (sr == null)
+        {
+            sr = GetComponent<SpriteRenderer>();
         }
     }
 

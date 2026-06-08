@@ -57,6 +57,9 @@ public class BattleManager : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioSource battleBgmSource;
+
+    [Header("Skill Effect")]
+    [SerializeField] private Transform effectLayer;
     private BattleState state;
 
     private int enemyCurrentHP;
@@ -426,6 +429,11 @@ public class BattleManager : MonoBehaviour
         int gainedExp = enemyData.expReward;
         int gainedGold = enemyData.goldReward;
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.defeatedEnemyId = GameManager.Instance.currentBattleEnemyId;
+        }
+
         GameManager.Instance.gold += gainedGold;
 
         string levelUpMessage = AddExpAndBuildLevelUpMessage(gainedExp);
@@ -787,6 +795,7 @@ public class BattleManager : MonoBehaviour
 
             GameManager.Instance.currentBattleEnemy = null;
             GameManager.Instance.currentBattleEnemyId = "";
+            GameManager.Instance.fadeInOnMainSceneLoad = returnScene == "MainScene";
         }
         if (BGMManager.Instance != null)
         {
@@ -1016,6 +1025,11 @@ public class BattleManager : MonoBehaviour
 
     private IEnumerator UseThunderSkillRoutine(SkillData skill)
     {
+        messageText.text = $"{skill.skillName}!";
+        yield return WaitForConfirm();
+
+        yield return PlaySkillEffectRoutine(skill);
+
         int damage = Mathf.Max(3, GameManager.Instance.magicAttack * 2 - enemyData.magicDefense);
 
         enemyCurrentHP -= damage;
@@ -1024,7 +1038,7 @@ public class BattleManager : MonoBehaviour
             enemyCurrentHP = 0;
         }
 
-        messageText.text = $"{skill.skillName}!\n{enemyData.enemyName}에게 {damage}의 데미지!";
+        messageText.text = $"{enemyData.enemyName}에게 {damage}의 데미지!";
         yield return WaitForConfirm();
 
         if (enemyCurrentHP <= 0)
@@ -1161,5 +1175,44 @@ public class BattleManager : MonoBehaviour
     private bool IsPartyDefeated()
     {
         return GameManager.Instance.currentHP <= 0;
+    }
+    private IEnumerator PlaySkillEffectRoutine(SkillData skill)
+    {
+        if (skill == null)
+        {
+            yield break;
+        }
+
+        GameObject spawnedEffect = null;
+
+        if (skill.effectPrefab != null)
+        {
+            Transform parent = effectLayer != null ? effectLayer : null;
+            spawnedEffect = Instantiate(skill.effectPrefab, parent);
+
+            RectTransform rectTransform = spawnedEffect.GetComponent<RectTransform>();
+            if (rectTransform != null)
+            {
+                rectTransform.anchoredPosition = Vector2.zero;
+                rectTransform.localScale = Vector3.one;
+            }
+        }
+
+        if (skill.sfx != null)
+        {
+            AudioSource.PlayClipAtPoint(skill.sfx, Vector3.zero);
+        }
+
+        float waitTime = Mathf.Max(0f, skill.effectDuration);
+
+        if (waitTime > 0f)
+        {
+            yield return new WaitForSeconds(waitTime);
+        }
+
+        if (spawnedEffect != null)
+        {
+            Destroy(spawnedEffect);
+        }
     }
 }

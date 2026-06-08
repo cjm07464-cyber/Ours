@@ -9,6 +9,12 @@ public class PlayerLoader : MonoBehaviour
         if (GameManager.Instance != null)
         {
             transform.position = GameManager.Instance.playerPosition;
+
+            PlayerController playerController = GetComponent<PlayerController>();
+            if (playerController != null)
+            {
+                playerController.ApplyFacingDirection(GameManager.Instance.playerFacingDirection);
+            }
         }
     }
 }

@@ -21,3 +21,6 @@ MonoBehaviour:
   targetType: 0
   elementType: 0
   power: 30
+  effectPrefab: {fileID: 0}
+  sfx: {fileID: 0}
+  effectDuration: 0

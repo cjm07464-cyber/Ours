@@ -38,6 +38,7 @@ public class EnemyController : MonoBehaviour
     [Header("Encounter")]       // 필드 적마다 고유하게 넣을 고유의 값
     [SerializeField] private string encounterId;
     [SerializeField] private float escapeIgnoreSeconds = 3f;
+    [SerializeField] private float defeatedRespawnSeconds = 10f;
     [SerializeField] private float blinkInterval = 0.15f;
     private Collider2D[] enemyColliders;
     private bool encounterDisabled;
@@ -70,7 +71,11 @@ public class EnemyController : MonoBehaviour
             encounterId = gameObject.name;
         }
 
-        if (GameManager.Instance != null && GameManager.Instance.escapedEnemyId == encounterId)
+        if (GameManager.Instance != null && GameManager.Instance.defeatedEnemyId == encounterId)
+        {
+            StartCoroutine(DefeatedRespawnRoutine());
+        }
+        else if (GameManager.Instance != null && GameManager.Instance.escapedEnemyId == encounterId)
         {
             StartCoroutine(EscapeIgnoreRoutine());
         }
@@ -299,6 +304,41 @@ public class EnemyController : MonoBehaviour
             GameManager.Instance.escapedEnemyId = "";
         }
     }
+
+    private IEnumerator DefeatedRespawnRoutine()
+    {
+        encounterDisabled = true;
+        battleStarted = false;
+        isMoving = false;
+        state = State.Wander;
+
+        SetEnemyVisible(false);
+
+        yield return new WaitForSeconds(defeatedRespawnSeconds);
+
+        transform.position = originPos;
+        SetIdle();
+        SetEnemyVisible(true);
+
+        encounterDisabled = false;
+        battleStarted = false;
+
+        if (GameManager.Instance != null && GameManager.Instance.defeatedEnemyId == encounterId)
+        {
+            GameManager.Instance.defeatedEnemyId = "";
+        }
+    }
+
+    private void SetEnemyVisible(bool visible)
+    {
+        if (sr != null)
+        {
+            sr.enabled = visible;
+        }
+
+        SetEnemyColliders(visible);
+    }
+
     private void SetEnemyColliders(bool enabled)
     {
         if (enemyColliders == null)

@@ -290,6 +290,8 @@ MonoBehaviour:
   returnPlayerPosition: {x: 0, y: 0}
   currentBattleEnemyId: 
   escapedEnemyId: 
+  defeatedEnemyId: 
+  fadeInOnMainSceneLoad: 0
   playerName: 
   level: 0
   currentHP: 0
@@ -306,8 +308,10 @@ MonoBehaviour:
   gold: 0
   currentSceneName: 
   playerPosition: {x: 0, y: 0}
+  playerFacingDirection: {x: 0, y: -1}
   introPlayed: 1
   ratBossDefeated: 0
+  learnedSkillIds: []
 --- !u!4 &61616171
 Transform:
   m_ObjectHideFlags: 0

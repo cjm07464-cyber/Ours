@@ -4,7 +4,8 @@
 
 ```text
 BootScene
-  ├─ 인트로 연출
+  ├─ 인트로 크레딧
+  ├─ 지구 로고 / Ours 타이틀
   ├─ 처음부터 → 이름 입력 → TownScene
   ├─ 이어하기 → 저장된 씬
   └─ 종료
@@ -20,6 +21,7 @@ BattleScene
 
 주의:
 - 현재 프로젝트에는 기존 `Title`, `MainScene` 씬 이름이 남아 있을 수 있다.
+- 현재 `Title` 씬이 BootScene 역할을 수행한다.
 - 목표 명칭은 `BootScene`, `TownScene`, `BattleScene`이다.
 
 ## 주요 싱글톤 / 유지 오브젝트
@@ -42,29 +44,49 @@ BattleScene
 - BootScene/Title 복귀 시 StopAndDestroy 가능
 - DontDestroyOnLoad
 
-## BootScene 구성 목표
+## BootScene / Title 구성
+
+현재 Title 씬 기준:
 
 ```text
-BootScene
+Title
 ├── Main Camera
 ├── EventSystem
 ├── BootSceneController
-├── Boot_BGM
+├── TitleManager
+├── GameManager
+├── Boot_BGM 또는 AudioSource
 └── Canvas
     ├── FadeOverlay
+    ├── TitleManagerUI
+    ├── IntroCreditGroup
+    │   ├── CreditTopText
+    │   ├── CreditLine
+    │   └── CreditBottomText
     ├── IntroText
-    ├── TitleGroup
-    │   ├── EarthImage
-    │   ├── UrsText
-    │   └── MenuGroup
-    │       ├── Selector
-    │       ├── NewGameText
-    │       ├── ContinueText
-    │       └── QuitText
-    └── NameInputPanel
+    └── TitleGroup
+        ├── EarthImage
+        ├── UrsText
+        ├── MenuGroup
+        │   ├── MenuSelector
+        │   ├── NewGameText
+        │   ├── ContinueText
+        │   └── QuitText
+        └── StudentCreditText
 ```
 
+역할:
+- `FadeOverlay`: 시작 검은 배경 및 이어하기 페이드아웃
+- `TitleManagerUI`: 기존 이름 입력 / 시놉시스 / 확인 패널
+- `IntroCreditGroup`: 시작 크레딧 3개 표시
+- `TitleGroup`: 지구 로고, Ours 텍스트, 메뉴, 하단 서명
+- `EarthImage`: Animator로 지구 자전
+- `BootSceneController`: 지구 페이드/이동/축소, 메뉴 선택, 이어하기 처리
+- `TitleManager`: 이름 입력과 시놉시스 흐름
+
 ## TownScene 구성
+
+현재는 기존 `MainScene` 이름이 남아 있을 수 있다.
 
 - Player
   - PlayerController
@@ -104,19 +126,22 @@ BattleScene
 ### 새 게임
 
 ```text
-BootScene
+BootScene/Title
 → 처음부터
 → 이름 입력
 → GameManager 새 데이터 초기화
-→ TownScene 로드
+→ 시놉시스
+→ TownScene/MainScene 로드
 ```
 
 ### 이어하기
 
 ```text
-BootScene
+BootScene/Title
 → SaveSystem.HasSaveData()
 → 저장 데이터 있으면 Continue 활성화
+→ 이어하기 선택
+→ FadeOverlay 페이드아웃
 → SaveSystem.LoadGame()
 → 저장된 씬 로드
 ```
@@ -143,3 +168,20 @@ CommandSelector
 → 필요 시 EffectLayer에 effectPrefab 생성
 → 데미지/회복 처리
 ```
+
+## 씬 이름 변경 예정
+
+목표:
+
+```text
+Title → BootScene
+MainScene → TownScene
+BattleScene 유지
+```
+
+변경 시 확인:
+- Build Settings
+- 모든 `SceneManager.LoadScene(...)` 문자열
+- 저장 데이터 `currentSceneName`
+- 전투 복귀용 `returnSceneName`
+- 게임오버 / 메뉴 종료 목적지

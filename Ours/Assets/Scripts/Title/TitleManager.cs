@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class TitleManager : MonoBehaviour
 {
+    [Header("Boot Scene Integration")]
+    [SerializeField] private bool useBootTitleMenu;
+
     public GameObject continuePanel;
     public GameObject newGamePanel;
     public GameObject introPanel;
@@ -45,6 +48,11 @@ public class TitleManager : MonoBehaviour
     {
         HideAllPanels(); // 🔥 이거 반드시 먼저
 
+        if (useBootTitleMenu)
+        {
+            return;
+        }
+
         bool HasSaveData = SaveSystem.HasSaveData();
         if (HasSaveData)
         {
@@ -69,12 +77,45 @@ public class TitleManager : MonoBehaviour
             HandleIntroZInput();
         }
     }
+
+    public void SetBootTitleMenuMode(bool enabled)
+    {
+        useBootTitleMenu = enabled;
+    }
+
+    public void BeginNewGameNameInput()
+    {
+        HideAllPanels();
+
+        if (newGamePanel != null)
+        {
+            newGamePanel.SetActive(true);
+        }
+
+        ShowNameInputStep();
+    }
+
     private void HideAllPanels()
     {
-        continuePanel.SetActive(false);
-        newGamePanel.SetActive(false);
-        confirmResetPanel.SetActive(false);
-        introPanel.SetActive(false);
+        if (continuePanel != null)
+        {
+            continuePanel.SetActive(false);
+        }
+
+        if (newGamePanel != null)
+        {
+            newGamePanel.SetActive(false);
+        }
+
+        if (confirmResetPanel != null)
+        {
+            confirmResetPanel.SetActive(false);
+        }
+
+        if (introPanel != null)
+        {
+            introPanel.SetActive(false);
+        }
     }
     public void ShowNameInputStep()
     {
@@ -126,10 +167,11 @@ public class TitleManager : MonoBehaviour
 
     public void StartIntro()
     {
-        if (introAudioSource != null)
+        if (introAudioSource != null && !introAudioSource.isPlaying)
         {
             introAudioSource.Play();
         }
+
         introIndex = 0;
         ShowCurrentIntroLine();
     }

@@ -2,9 +2,9 @@
 
 ## 단기 예정 작업
 
-- BootScene 인트로/타이틀 기능 뼈대 구현
-- BootScene 지구 로고 연출 구현
-- 기존 Title/MainScene → BootScene/TownScene 명칭 전환 검토
+- Title/MainScene → BootScene/TownScene 명칭 전환 계획 수립
+- 실제 씬 파일명 변경 및 문자열 참조 정리
+- 저장 데이터의 기존 `MainScene` / `Title` 값 호환 처리
 - 마을맵 1차 완성
 - PK썬더 이펙트 크기/속도/SFX 최종 조정
 - BattleManager의 구 CommandText 방식 정리
@@ -12,21 +12,25 @@
 
 ## 1. BootScene
 
-목표:
-- 게임 시작 시 제작자/출품 인트로 표시
-- 지구 이미지가 O 위치를 대신하는 Ours 타이틀 연출
-- 처음부터 / 이어하기 / 종료 메뉴
-- 저장 데이터 없으면 이어하기 비활성화
-- 처음부터 선택 시 이름 입력
+현재 상태:
+- 기존 `Title` 씬이 BootScene 역할을 수행 중
+- IntroCreditGroup 기반 시작 크레딧 구현
+- 지구 로고 연출 구현
+- Ours 타이틀 메뉴 구현
+- 처음부터 / 이어하기 / 종료 구현
+- 이어하기 비활성화 및 페이드아웃 로드 구현
 
-작업 방식:
-- Codex는 기능 뼈대만 구현
-- 사용자가 Unity Editor에서 이미지, 위치, 폰트, 타이밍 조정
+남은 작업:
+- 실제 씬 파일명 `Title` → `BootScene` 변경
+- 관련 문자열 참조 정리
+- 저장 데이터 호환 처리 확인
+- 타이틀 화면 세부 연출 최종 조정
 
 ## 2. TownScene
 
 목표:
 - 기존 MainScene을 TownScene 역할로 정리
+- 실제 씬 파일명 `MainScene` → `TownScene` 변경
 - 마을맵 1차 완성
 - 필드 적 / 전투 진입 / 메뉴 / 저장 유지
 - 향후 NPC와 보스전 진입 지점 추가

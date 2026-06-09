@@ -8,17 +8,33 @@
 
 주의:
 - 실제 프로젝트에는 아직 `Title`, `MainScene` 이름이 남아 있을 수 있다.
+- 현재 `Title` 씬이 BootScene 역할을 수행한다.
 - 씬 파일명 변경은 문자열 참조 분석 후 진행한다.
 
 ## 구현 완료
 
-### 기존 Title / Boot 역할
+### Title / Boot 역할
 
-- 새 게임 시작
-- 이름 입력
+- Boot_BGM 재생
+- IntroCreditGroup 기반 시작 크레딧 3개 표시
+  - Created at / Pai Chai University
+  - Directed by / DAVID
+  - Inspired by / MOTHER
+- 인트로 중 Z/X 스킵
+- 지구 이미지 페이드 인
+- 지구 자전 Animator 적용
+- 지구 이미지 축소 및 O 위치 이동
+- 지구 연출 중 Z/X 스킵
+- 지구 이미지 + UrsText로 Ours 타이틀 구성
+- StudentCreditText 하단 표기
+- 처음부터 / 이어하기 / 종료 메뉴
 - 저장 파일이 있으면 이어하기 가능
-- 저장 파일이 없으면 새 게임 흐름 가능
-- 저장 초기화 확인 패널
+- 저장 파일이 없으면 이어하기 비활성 / 선택 불가
+- 이어하기 선택 시 FadeOverlay 페이드아웃 후 저장 씬 이동
+- 처음부터 선택 시 기존 이름 입력 흐름 연결
+- 이름 확정 후 시놉시스 표시
+- Boot_BGM이 시놉시스에서 처음부터 다시 재생되지 않고 이어서 재생
+- 종료 선택 시 에디터 로그 / 빌드 종료
 
 ### MainScene / Town 역할
 
@@ -64,6 +80,19 @@
 - TMP 한글 폰트 재생성 및 교체
 - 한글 완성형 / 단독 자모 출력 대응
 
+## 현재 Boot/Title Canvas 구조
+
+```text
+Canvas
+├── FadeOverlay
+├── TitleManagerUI
+├── IntroCreditGroup
+├── IntroText
+└── TitleGroup
+```
+
+상세는 `Docs/BOOT_SYSTEM.md`를 기준으로 한다.
+
 ## 현재 BattleScene Canvas 구조
 
 ```text
@@ -82,12 +111,9 @@ Canvas
 
 ## 현재 미구현 / 미완성
 
-- BootScene 인트로/타이틀 연출
-- 지구 이미지 회전 / 축소 / O 위치 이동 연출
-- Ours 타이틀 메뉴
-- 이어하기 비활성화 시각 처리
 - MainScene → TownScene 명칭 전환
 - Title → BootScene 명칭 전환
+- 씬 이름 변경 후 저장 데이터 호환 처리
 - 마을맵 1차 완성
 - 방어 커맨드
 - 아이템 커맨드
@@ -106,4 +132,5 @@ Canvas
 - Fade Image는 FadePanel/FadeOverlay의 Image여야 한다.
 - Enemy Image는 `EnemyLayer/Enemy Image` 하나만 사용한다.
 - EffectLayer는 스킬 이펙트 프리팹 생성 위치다.
-- BootScene은 Codex가 완성 연출까지 하지 말고 Inspector 조정 가능한 뼈대만 구현한다.
+- BootScene/Title의 `TitleManagerUI`는 `FadeOverlay` 다음 순서에 둔다.
+- BootScene/Title의 시각 연출 세부값은 Unity Inspector에서 직접 조정한다.

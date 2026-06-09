@@ -2,10 +2,14 @@
 
 ## 최우선
 
-- [ ] BootScene 인트로/타이틀 기능 뼈대 구현
-- [ ] BootScene 지구 로고 연출용 UI 세팅
-- [ ] BootScene 이어하기 비활성화 UI 구현
+- [x] BootScene 인트로/타이틀 기능 뼈대 구현
+- [x] BootScene 지구 로고 연출용 UI 세팅
+- [x] BootScene 이어하기 비활성화 UI 구현
+- [x] BootScene 인트로/지구 연출 스킵 구현
+- [x] BootScene 이어하기 페이드아웃 후 로드 구현
 - [ ] Title/MainScene → BootScene/TownScene 명칭 전환 계획 수립
+- [ ] Title/MainScene → BootScene/TownScene 실제 씬 이름 변경
+- [ ] 씬 이름 변경 후 저장 데이터 호환 처리
 - [ ] 마을맵 1차 완성
 - [ ] BattleManager 코드 정리
 - [ ] 방어 커맨드 구현
@@ -14,18 +18,27 @@
 
 ## BootScene / 타이틀
 
-- [ ] BootScene 생성 또는 기존 Title 씬을 BootScene 역할로 정리
-- [ ] 검은 화면에서 BGM 재생
-- [ ] `Directed by 조정민` 페이드 인/아웃
-- [ ] `배재대 개인작품 출품작` 페이드 인/아웃
-- [ ] 지구 이미지 중앙 회전
-- [ ] 지구 이미지 축소 및 O 위치 이동
-- [ ] 지구 이미지 + `urs` 텍스트로 `Ours` 타이틀 구성
-- [ ] 처음부터 / 이어하기 / 종료 메뉴
-- [ ] 저장 데이터 없을 때 이어하기 반투명 및 선택 불가
-- [ ] 처음부터 선택 시 기존 이름 입력 흐름 연결
-- [ ] 이어하기 선택 시 저장 데이터 로드
-- [ ] 종료 선택 시 Application.Quit 처리
+- [x] 기존 Title 씬을 BootScene 역할로 정리
+- [x] 검은 화면에서 BGM 재생
+- [x] IntroCreditGroup 기반 크레딧 표시
+- [x] `Created at / Pai Chai University` 페이드 인/아웃
+- [x] `Directed by / DAVID` 페이드 인/아웃
+- [x] `Inspired by / MOTHER` 페이드 인/아웃
+- [x] 인트로 중 Z/X 스킵
+- [x] 지구 이미지 페이드 인
+- [x] 지구 자전 Animator 적용
+- [x] 지구 이미지 축소 및 O 위치 이동
+- [x] 지구 연출 중 Z/X 스킵
+- [x] 지구 이미지 + `urs` 텍스트로 `Ours` 타이틀 구성
+- [x] StudentCreditText 하단 표기
+- [x] 처음부터 / 이어하기 / 종료 메뉴
+- [x] 저장 데이터 없을 때 이어하기 반투명 및 선택 불가
+- [x] 처음부터 선택 시 기존 이름 입력 흐름 연결
+- [x] 이어하기 선택 시 저장 데이터 로드
+- [x] 이어하기 선택 시 FadeOverlay 페이드아웃
+- [x] 종료 선택 시 Application.Quit 처리
+- [ ] 실제 씬 파일명 `Title` → `BootScene` 변경
+- [ ] BootScene 관련 문자열 참조 정리
 
 ## 전투 시스템
 
@@ -82,6 +95,7 @@
 ## TownScene / 마을
 
 - [ ] 기존 MainScene을 TownScene 역할로 정리
+- [ ] 실제 씬 파일명 `MainScene` → `TownScene` 변경
 - [ ] 마을맵 1차 배치
 - [ ] 길 / 집 / 나무 / 장식 배치
 - [ ] 충돌 영역 정리

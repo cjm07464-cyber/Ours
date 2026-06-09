@@ -1598,7 +1598,7 @@ MonoBehaviour:
   skillSelector: {fileID: 130708139}
   pkHealSkill: {fileID: 11400000, guid: b8a9e6d2c9fa450b8a3bf397dce0b712, type: 2}
   pkThunderSkill: {fileID: 11400000, guid: 5f1a4d4afbb54ef299b60214fd7fa135, type: 2}
-  defaultReturnSceneName: MainScene
+  defaultReturnSceneName: TownScene
   messageWaitSeconds: 1
   fadeImage: {fileID: 1585183351}
   fadeDuration: 1

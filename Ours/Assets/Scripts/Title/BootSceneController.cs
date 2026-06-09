@@ -19,10 +19,10 @@ public class BootSceneController : MonoBehaviour
     private const int QuitIndex = 2;
     private const int MenuCount = 3;
 
-    [Header("Existing Title Flow")]
+    [Header("Existing Name Input Flow")]
     [SerializeField] private TitleManager titleManager;
     [SerializeField] private bool useTitleManagerNameInput = true;
-    [SerializeField] private string townSceneName = "MainScene";
+    [SerializeField] private string townSceneName = GameManager.TownSceneName;
 
     [Header("Audio")]
     [SerializeField] private AudioSource bootBgmSource;
@@ -643,10 +643,10 @@ public class BootSceneController : MonoBehaviour
 
         SaveSystem.LoadGame();
 
-        string sceneToLoad = townSceneName;
+        string sceneToLoad = GameManager.NormalizeSceneName(townSceneName);
         if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.currentSceneName))
         {
-            sceneToLoad = GameManager.Instance.currentSceneName;
+            sceneToLoad = GameManager.NormalizeSceneName(GameManager.Instance.currentSceneName);
         }
 
         SceneManager.LoadScene(sceneToLoad);

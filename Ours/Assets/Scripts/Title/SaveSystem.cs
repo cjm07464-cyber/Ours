@@ -36,6 +36,7 @@ public class SaveSystem
 
         string json = File.ReadAllText(savePath);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
+        data.currentSceneName = GameManager.NormalizeSceneName(data.currentSceneName);
 
         ApplyToGameManager(data);
 

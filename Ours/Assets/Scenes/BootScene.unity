@@ -464,7 +464,7 @@ MonoBehaviour:
   currentBattleEnemyId: 
   escapedEnemyId: 
   defeatedEnemyId: 
-  fadeInOnMainSceneLoad: 0
+  fadeInOnTownSceneLoad: 0
   playerName: 
   level: 0
   currentHP: 0
@@ -5546,7 +5546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   titleManager: {fileID: 1146921053}
   useTitleManagerNameInput: 1
-  townSceneName: MainScene
+  townSceneName: TownScene
   bootBgmSource: {fileID: 1146921055}
   playBgmOnStart: 1
   fadeOverlay: {fileID: 477657732}

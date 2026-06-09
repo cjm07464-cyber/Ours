@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
     public const string PKHealSkillId = "pk_heal";
     public const string PKThunderSkillId = "pk_thunder";
+    public const string BootSceneName = "BootScene";
+    public const string TownSceneName = "TownScene";
 
     public static GameManager Instance;
     public EnemyData currentBattleEnemy;     // currentBattleEnemy = 이번 전투에서 싸울 적
@@ -16,7 +19,8 @@ public class GameManager : MonoBehaviour
     public string currentBattleEnemyId; // currentBattleEnemyId = 이번 전투에서 싸울 적의 ID (EnemyData에서 가져옴)
     public string escapedEnemyId;   // escapedEnemyId = 도망친뒤의 적의 ID (EnemyData에서 가져옴)
     public string defeatedEnemyId;
-    public bool fadeInOnMainSceneLoad;
+    [FormerlySerializedAs("fadeInOnMainSceneLoad")]
+    public bool fadeInOnTownSceneLoad;
 
     public string playerName;
     public int level;
@@ -84,7 +88,7 @@ public class GameManager : MonoBehaviour
 
         gold = 0;
 
-        currentSceneName = "MainScene";
+        currentSceneName = TownSceneName;
         playerPosition = Vector2.zero;
         playerFacingDirection = Vector2.down;
         currentBattleEnemy = null;
@@ -92,7 +96,7 @@ public class GameManager : MonoBehaviour
         currentBattleEnemyId = "";
         escapedEnemyId = "";
         defeatedEnemyId = "";
-        fadeInOnMainSceneLoad = false;
+        fadeInOnTownSceneLoad = false;
 
         introPlayed = false;
         ratBossDefeated = false;
@@ -119,7 +123,7 @@ public class GameManager : MonoBehaviour
         data.luck = luck;
         data.gold = gold;
 
-        data.currentSceneName = currentSceneName;
+        data.currentSceneName = NormalizeSceneName(currentSceneName);
 
         data.playerPosX = playerPosition.x;
         data.playerPosY = playerPosition.y;
@@ -151,7 +155,7 @@ public class GameManager : MonoBehaviour
         luck = data.luck;
         gold = data.gold;
 
-        currentSceneName = data.currentSceneName;
+        currentSceneName = NormalizeSceneName(data.currentSceneName);
         playerPosition = new Vector2(data.playerPosX, data.playerPosY);
         playerFacingDirection = new Vector2(data.playerFacingDirX, data.playerFacingDirY);
         if (playerFacingDirection.sqrMagnitude < 0.0001f)
@@ -203,5 +207,25 @@ public class GameManager : MonoBehaviour
         }
 
         return learnedSkillIds.Contains(skillId);
+    }
+
+    public static string NormalizeSceneName(string sceneName)
+    {
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            return sceneName;
+        }
+
+        if (sceneName == "Title")
+        {
+            return BootSceneName;
+        }
+
+        if (sceneName == "MainScene")
+        {
+            return TownSceneName;
+        }
+
+        return sceneName;
     }
 }

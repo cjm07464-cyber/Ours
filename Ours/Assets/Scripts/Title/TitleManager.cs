@@ -222,7 +222,7 @@ public class TitleManager : MonoBehaviour
                 }
 
                 GameManager.Instance.introPlayed = true;
-                UnityEngine.SceneManagement.SceneManager.LoadScene("MainScene");
+                UnityEngine.SceneManagement.SceneManager.LoadScene(GameManager.TownSceneName);
                 return;
             }
 
@@ -246,11 +246,11 @@ public class TitleManager : MonoBehaviour
     {
         SaveSystem.LoadGame();
 
-        string sceneToLoad = "MainScene";
+        string sceneToLoad = GameManager.TownSceneName;
 
         if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.currentSceneName))
         {
-            sceneToLoad = GameManager.Instance.currentSceneName;
+            sceneToLoad = GameManager.NormalizeSceneName(GameManager.Instance.currentSceneName);
         }
 
         SceneManager.LoadScene(sceneToLoad);

@@ -49,7 +49,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] private SkillData pkThunderSkill;
 
     [Header("Battle Settings")]
-    [SerializeField] private string defaultReturnSceneName = "MainScene";
+    [SerializeField] private string defaultReturnSceneName = GameManager.TownSceneName;
     [SerializeField] private float messageWaitSeconds = 1.0f;
     [Header("Fade")]
     [SerializeField] private Image fadeImage;
@@ -784,18 +784,18 @@ public class BattleManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        string returnScene = defaultReturnSceneName;
+        string returnScene = GameManager.NormalizeSceneName(defaultReturnSceneName);
 
         if (GameManager.Instance != null)
         {
             if (!string.IsNullOrEmpty(GameManager.Instance.returnSceneName))
             {
-                returnScene = GameManager.Instance.returnSceneName;
+                returnScene = GameManager.NormalizeSceneName(GameManager.Instance.returnSceneName);
             }
 
             GameManager.Instance.currentBattleEnemy = null;
             GameManager.Instance.currentBattleEnemyId = "";
-            GameManager.Instance.fadeInOnMainSceneLoad = returnScene == "MainScene";
+            GameManager.Instance.fadeInOnTownSceneLoad = returnScene == GameManager.TownSceneName;
         }
         if (BGMManager.Instance != null)
         {
@@ -1110,13 +1110,13 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("세이브 파일이 없어 MainScene으로 복귀합니다.");
+            Debug.LogWarning("세이브 파일이 없어 TownScene으로 복귀합니다.");
 
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.currentHP = Mathf.Max(1, GameManager.Instance.maxHP / 2);
                 GameManager.Instance.currentMP = Mathf.Max(0, GameManager.Instance.maxMP / 2);
-                GameManager.Instance.currentSceneName = defaultReturnSceneName;
+                GameManager.Instance.currentSceneName = GameManager.NormalizeSceneName(defaultReturnSceneName);
             }
         }
 
@@ -1134,11 +1134,11 @@ public class BattleManager : MonoBehaviour
 
         Time.timeScale = 1f;
 
-        string sceneToLoad = defaultReturnSceneName;
+        string sceneToLoad = GameManager.NormalizeSceneName(defaultReturnSceneName);
 
         if (GameManager.Instance != null && !string.IsNullOrEmpty(GameManager.Instance.currentSceneName))
         {
-            sceneToLoad = GameManager.Instance.currentSceneName;
+            sceneToLoad = GameManager.NormalizeSceneName(GameManager.Instance.currentSceneName);
         }
 
         SceneManager.LoadScene(sceneToLoad);
@@ -1170,7 +1170,7 @@ public class BattleManager : MonoBehaviour
         }
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Title");
+        SceneManager.LoadScene(GameManager.BootSceneName);
     }
     private bool IsPartyDefeated()
     {

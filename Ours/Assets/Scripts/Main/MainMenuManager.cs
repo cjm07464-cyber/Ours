@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
 {
-    private const string MainSceneName = "MainScene";
+    private const string TownSceneName = GameManager.TownSceneName;
 
     private static MainMenuManager instance;
 
@@ -52,7 +52,7 @@ public class MainMenuManager : MonoBehaviour
 
     private static void EnsureMainMenuManager(Scene scene)
     {
-        if (scene.name != MainSceneName)
+        if (scene.name != TownSceneName)
         {
             return;
         }
@@ -79,7 +79,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name != MainSceneName)
+        if (SceneManager.GetActiveScene().name != TownSceneName)
         {
             enabled = false;
             return;
@@ -106,7 +106,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (SceneManager.GetActiveScene().name != MainSceneName)
+        if (SceneManager.GetActiveScene().name != TownSceneName)
         {
             return;
         }
@@ -364,7 +364,7 @@ public class MainMenuManager : MonoBehaviour
                     BGMManager.Instance.StopAndDestroy();
                 }
 
-                SceneManager.LoadScene("Title");
+                SceneManager.LoadScene(GameManager.BootSceneName);
                 break;
         }
     }

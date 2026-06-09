@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class SceneFadeIn : MonoBehaviour
 {
-    private const string MainSceneName = "MainScene";
+    private const string TownSceneName = GameManager.TownSceneName;
 
     [SerializeField] private float fadeDuration = 1.0f;
 
@@ -20,17 +20,17 @@ public class SceneFadeIn : MonoBehaviour
 
     private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name != MainSceneName)
+        if (scene.name != TownSceneName)
         {
             return;
         }
 
-        if (GameManager.Instance == null || !GameManager.Instance.fadeInOnMainSceneLoad)
+        if (GameManager.Instance == null || !GameManager.Instance.fadeInOnTownSceneLoad)
         {
             return;
         }
 
-        GameManager.Instance.fadeInOnMainSceneLoad = false;
+        GameManager.Instance.fadeInOnTownSceneLoad = false;
 
         GameObject fadeObject = new GameObject("SceneFadeIn");
         SceneFadeIn fadeIn = fadeObject.AddComponent<SceneFadeIn>();

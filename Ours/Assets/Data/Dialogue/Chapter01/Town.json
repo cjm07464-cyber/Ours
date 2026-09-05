@@ -1,0 +1,12 @@
+{
+  "dialogues": [
+    {
+      "id": "ch01_town_ajumma_01",
+      "speaker": "아줌마",
+      "lines": [
+        "안녕.",
+        "학교 가는 길이니?"
+      ]
+    }
+  ]
+}

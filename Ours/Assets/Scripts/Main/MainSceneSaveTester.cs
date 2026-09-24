@@ -9,7 +9,7 @@ public class MainSceneSaveTester : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0))
+        if (GameInput.DebugZeroPressed)
         {
             SaveNow();
         }

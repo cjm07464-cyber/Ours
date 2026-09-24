@@ -11,6 +11,21 @@ public class SaveSystem
         return File.Exists(savePath);
     }
 
+    public static bool HasValidSaveData()
+    {
+        if (!HasSaveData())
+        {
+            return false;
+        }
+
+        if (!TryReadSaveData(out SaveData data))
+        {
+            return false;
+        }
+
+        return IsValidSaveData(data);
+    }
+
     public static void SaveGame()
     {
         if (GameManager.Instance == null)
@@ -34,14 +49,63 @@ public class SaveSystem
             return;
         }
 
-        string json = File.ReadAllText(savePath);
-        SaveData data = JsonUtility.FromJson<SaveData>(json);
+        if (!TryReadSaveData(out SaveData data))
+        {
+            return;
+        }
+
+        if (!IsValidSaveData(data))
+        {
+            Debug.LogWarning("세이브 데이터가 올바르지 않아 불러오기를 중단합니다.");
+            return;
+        }
+
         data.currentSceneName = GameManager.NormalizeSceneName(data.currentSceneName);
 
         ApplyToGameManager(data);
 
         Debug.Log("불러오기 완료");
     }
+
+    private static bool TryReadSaveData(out SaveData data)
+    {
+        data = null;
+
+        try
+        {
+            string json = File.ReadAllText(savePath);
+            data = JsonUtility.FromJson<SaveData>(json);
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogWarning($"세이브 파일을 읽거나 파싱할 수 없습니다: {exception.Message}");
+            return false;
+        }
+
+        if (data == null)
+        {
+            Debug.LogWarning("세이브 데이터가 비어 있습니다.");
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsValidSaveData(SaveData data)
+    {
+        if (data == null)
+        {
+            return false;
+        }
+
+        if (data.level <= 0 || data.maxHP <= 0 || data.currentHP < 0 || data.maxMP < 0 || data.currentMP < 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     private static void ApplyToGameManager(SaveData data)
     {
         if (GameManager.Instance == null)

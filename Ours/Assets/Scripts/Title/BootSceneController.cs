@@ -21,8 +21,10 @@ public class BootSceneController : MonoBehaviour
 
     [Header("Existing Name Input Flow")]
     [SerializeField] private TitleManager titleManager;
+    [SerializeField] private ForestNameEntryController titleNameEntryController;
     [SerializeField] private bool useTitleManagerNameInput = true;
     [SerializeField] private string townSceneName = GameManager.TownSceneName;
+    [SerializeField] private string prologueSceneName = "PrologueScene";
 
     [Header("Audio")]
     [SerializeField] private AudioSource bootBgmSource;
@@ -72,6 +74,10 @@ public class BootSceneController : MonoBehaviour
 
     [Header("Continue Fade")]
     [SerializeField] private float continueFadeOutDuration = 1.0f;
+    [SerializeField] private float newGameNameEntryFadeOutDuration = 1.0f;
+
+    [Header("Title Fade In")]
+    [SerializeField] private float titleFadeInDuration = 1.5f;
 
     private int selectedIndex;
     private bool continueEnabled;
@@ -79,6 +85,7 @@ public class BootSceneController : MonoBehaviour
     private bool skipRequested;
     private bool currentIntroSkipped;
     private bool earthSequenceCompleted;
+    private bool startupRoutingStarted;
     private BootPhase phase;
 
     private void Awake()
@@ -96,6 +103,11 @@ public class BootSceneController : MonoBehaviour
 
     private void Start()
     {
+        if (TryRouteToForestScene())
+        {
+            return;
+        }
+
         PrepareInitialState();
 
         if (playBgmOnStart && bootBgmSource != null)
@@ -111,6 +123,29 @@ public class BootSceneController : MonoBehaviour
         {
             ShowTitleAndMenuImmediate();
         }
+
+        StartTitleFadeIn();
+    }
+
+    private bool TryRouteToForestScene()
+    {
+        if (startupRoutingStarted || SaveSystem.HasValidSaveData())
+        {
+            return false;
+        }
+
+        StartupSessionState state = GameManager.Instance != null
+            ? GameManager.Instance.startupSessionState
+            : StartupSessionState.None;
+
+        if (state == StartupSessionState.NameChosen)
+        {
+            return false;
+        }
+
+        startupRoutingStarted = true;
+        SceneManager.LoadScene(GameManager.ForestSceneName);
+        return true;
     }
 
     private void Update()
@@ -121,19 +156,19 @@ public class BootSceneController : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (GameInput.UpPressed)
         {
             MoveSelection(-1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (GameInput.DownPressed)
         {
             MoveSelection(1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
             ExecuteSelection();
         }
@@ -141,7 +176,7 @@ public class BootSceneController : MonoBehaviour
 
     private void HandleSkipInput()
     {
-        if (!Input.GetKeyDown(KeyCode.Z) && !Input.GetKeyDown(KeyCode.X))
+        if (!GameInput.ConfirmPressed && !GameInput.CancelPressed)
         {
             return;
         }
@@ -165,9 +200,12 @@ public class BootSceneController : MonoBehaviour
         if (fadeOverlay != null)
         {
             fadeOverlay.gameObject.SetActive(true);
-            fadeOverlay.transform.SetAsFirstSibling();
+            fadeOverlay.transform.SetAsLastSibling();
 
             Color color = fadeOverlay.color;
+            color.r = 0f;
+            color.g = 0f;
+            color.b = 0f;
             color.a = 1f;
             fadeOverlay.color = color;
         }
@@ -252,6 +290,42 @@ public class BootSceneController : MonoBehaviour
         }
 
         ShowMenu();
+    }
+
+    private void StartTitleFadeIn()
+    {
+        if (fadeOverlay == null)
+        {
+            return;
+        }
+
+        StartCoroutine(TitleFadeInRoutine());
+    }
+
+    private IEnumerator TitleFadeInRoutine()
+    {
+        fadeOverlay.gameObject.SetActive(true);
+        fadeOverlay.transform.SetAsLastSibling();
+
+        Color color = fadeOverlay.color;
+        color.r = 0f;
+        color.g = 0f;
+        color.b = 0f;
+        color.a = 1f;
+        fadeOverlay.color = color;
+
+        float safeDuration = Mathf.Max(0.01f, titleFadeInDuration);
+        float timer = 0f;
+
+        while (timer < safeDuration)
+        {
+            timer += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(timer / safeDuration);
+            SetImageAlpha(fadeOverlay, 1f - t);
+            yield return null;
+        }
+
+        SetImageAlpha(fadeOverlay, 0f);
     }
 
     private IEnumerator FadeTextRoutine(string text)
@@ -550,7 +624,7 @@ public class BootSceneController : MonoBehaviour
 
     public void RefreshContinueState()
     {
-        continueEnabled = SaveSystem.HasSaveData();
+        continueEnabled = SaveSystem.HasValidSaveData();
         UpdateMenuVisuals();
     }
 
@@ -598,6 +672,17 @@ public class BootSceneController : MonoBehaviour
     {
         menuInputEnabled = false;
 
+        if (TryStartPendingNameNewGame())
+        {
+            return;
+        }
+
+        if (SaveSystem.HasValidSaveData() && titleNameEntryController != null)
+        {
+            StartCoroutine(StartNameEntryNewGameRoutine());
+            return;
+        }
+
         if (menuGroup != null)
         {
             menuGroup.SetActive(false);
@@ -623,9 +708,82 @@ public class BootSceneController : MonoBehaviour
         Debug.LogWarning("BootSceneController: TitleManager name input is not connected.");
     }
 
+    private IEnumerator StartNameEntryNewGameRoutine()
+    {
+        phase = BootPhase.Loading;
+
+        yield return FadeOutTitleForNameEntryRoutine();
+
+        if (menuGroup != null)
+        {
+            menuGroup.SetActive(false);
+        }
+
+        if (titleGroup != null)
+        {
+            titleGroup.SetActive(false);
+        }
+
+        titleNameEntryController.ShowNameEntryForNewGame(prologueSceneName);
+    }
+
+    private IEnumerator FadeOutTitleForNameEntryRoutine()
+    {
+        float duration = Mathf.Max(0.01f, newGameNameEntryFadeOutDuration);
+        float timer = 0f;
+        float startBgmVolume = bootBgmSource != null ? bootBgmSource.volume : 0f;
+
+        if (fadeOverlay != null)
+        {
+            fadeOverlay.gameObject.SetActive(true);
+            fadeOverlay.transform.SetAsLastSibling();
+            SetImageAlpha(fadeOverlay, 0f);
+        }
+
+        while (timer < duration)
+        {
+            timer += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(timer / duration);
+
+            SetImageAlpha(fadeOverlay, t);
+            if (bootBgmSource != null)
+            {
+                bootBgmSource.volume = Mathf.Lerp(startBgmVolume, 0f, t);
+            }
+
+            yield return null;
+        }
+
+        SetImageAlpha(fadeOverlay, 1f);
+        if (bootBgmSource != null)
+        {
+            bootBgmSource.volume = 0f;
+        }
+    }
+
+    private bool TryStartPendingNameNewGame()
+    {
+        if (SaveSystem.HasValidSaveData() || GameManager.Instance == null)
+        {
+            return false;
+        }
+
+        if (GameManager.Instance.startupSessionState != StartupSessionState.NameChosen ||
+            string.IsNullOrWhiteSpace(GameManager.Instance.pendingPlayerName))
+        {
+            return false;
+        }
+
+        string newPlayerName = GameManager.Instance.pendingPlayerName;
+        GameManager.Instance.StartNewGame(newPlayerName);
+        GameManager.Instance.ClearStartupSession();
+        SceneManager.LoadScene(prologueSceneName);
+        return true;
+    }
+
     private void ContinueGame()
     {
-        if (!SaveSystem.HasSaveData())
+        if (!SaveSystem.HasValidSaveData())
         {
             RefreshContinueState();
             return;

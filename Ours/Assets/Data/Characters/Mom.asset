@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb90bc99f963fb47a792e3620af9382, type: 3}
+  m_Name: Mom
+  m_EditorClassIdentifier: 
+  characterId: mom
+  displayName: "\uC5C4\uB9C8"
+  frontSprite: {fileID: 1378322790, guid: 640382224d619cb4bb2fe5b1af66bb36, type: 3}
+  backSprite: {fileID: 155115701, guid: 640382224d619cb4bb2fe5b1af66bb36, type: 3}
+  rightSprite: {fileID: 1263865032, guid: 640382224d619cb4bb2fe5b1af66bb36, type: 3}
+  leftSprite: {fileID: 0}
+  portraitBackgroundColor: {r: 0.34117648, g: 0.21960784, b: 0.43529412, a: 1}
+  portraitGradientColor: {r: 0.6039216, g: 0.44313726, b: 0.46666667, a: 1}
+  dialogueTypeSound: {fileID: 8300000, guid: 737c19bc044adcb47955c7b257b57266, type: 3}
+  portraits:
+  - expressionId: normal
+    sprite: {fileID: 21300000, guid: edb9bc54790deb947995d512da45bd04, type: 3}
+  - expressionId: angry
+    sprite: {fileID: 21300000, guid: 6abfde1a6fada2b4b92f811ba470fe38, type: 3}

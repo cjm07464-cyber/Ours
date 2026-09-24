@@ -22,7 +22,7 @@ public class CommandSelector : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (GameInput.RightPressed)
         {
             if ((currentIndex + 1) % columnCount != 0)
             {
@@ -31,7 +31,7 @@ public class CommandSelector : MonoBehaviour
 
             MoveSelectorTo(currentIndex);
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        else if (GameInput.LeftPressed)
         {
             if (currentIndex % columnCount != 0)
             {
@@ -40,7 +40,7 @@ public class CommandSelector : MonoBehaviour
 
             MoveSelectorTo(currentIndex);
         }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (GameInput.DownPressed)
         {
             int nextIndex = currentIndex + columnCount;
             if (nextIndex < options.Length)
@@ -50,7 +50,7 @@ public class CommandSelector : MonoBehaviour
 
             MoveSelectorTo(currentIndex);
         }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        else if (GameInput.UpPressed)
         {
             int nextIndex = currentIndex - columnCount;
             if (nextIndex >= 0)
@@ -61,7 +61,7 @@ public class CommandSelector : MonoBehaviour
             MoveSelectorTo(currentIndex);
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
             ExecuteCurrentCommand();
         }

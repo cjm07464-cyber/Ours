@@ -1,40 +1,40 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+using UnityEngine.Serialization;
 
 public class MainMenuManager : MonoBehaviour
 {
     private const string TownSceneName = GameManager.TownSceneName;
+    private const int MenuItemCount = 5;
+    private const float UnselectedTextX = -32f;
+    private const float SelectedTextX = 5f;
+    private const float CursorX = -20f;
+
+    private static readonly float[] SlotYPositions = { 215f, 105f, -5f, -115f, -225f };
 
     private static MainMenuManager instance;
 
-    private GameObject canvasObject;
-    private GameObject menuRoot;
+    [Header("References")]
+    [SerializeField] private GameObject mainMenuUI;
+    [SerializeField] private RectTransform cursor;
+    [SerializeField] private RectTransform statusText;
+    [SerializeField] private RectTransform equipmentText;
+    [SerializeField] private RectTransform bagText;
+    [SerializeField] private RectTransform phoneText;
+    [SerializeField] private RectTransform closeText;
+    [FormerlySerializedAs("playerStatusSlot")]
+    [SerializeField] private CharacterStatusSlotUI characterStatusSlot;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private DialogueController dialogueController;
+    [SerializeField] private GameEventRunner phoneEventRunner;
+    [SerializeField] private GameEventSequence phoneEventSequence;
 
-    private TextMeshProUGUI nameText;
-    private TextMeshProUGUI hpText;
-    private TextMeshProUGUI goldText;
+    [Header("Unlock")]
+    [SerializeField] private string menuUnlockFlagId = GameManager.FieldMenuUnlockFlagId;
 
-    private RectTransform cursorRect;
-    private TextMeshProUGUI descriptionText;
-
-    private TMP_FontAsset menuFont;
-    private readonly string[] menuItems = { "스탯", "가방", "저장하기", "게임종료" };
-    private readonly string[] menuDescriptions =
-    {
-        "현재 능력치를 확인합니다.",
-        "소지품을 확인합니다.",
-        "현재 상태를 저장합니다.",
-        "타이틀 화면으로 돌아갑니다."
-    };
-
-    private readonly TextMeshProUGUI[] commandTexts = new TextMeshProUGUI[4];
-
+    private readonly RectTransform[] menuTexts = new RectTransform[MenuItemCount];
     private int selectedIndex;
     private bool isMenuOpen;
-
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void RegisterSceneLoaded()
@@ -52,18 +52,16 @@ public class MainMenuManager : MonoBehaviour
 
     private static void EnsureMainMenuManager(Scene scene)
     {
-        if (scene.name != TownSceneName)
+        if (scene.name != TownSceneName || instance != null)
         {
             return;
         }
 
-        if (instance != null)
+        MainMenuManager existingManager = FindObjectOfType<MainMenuManager>(true);
+        if (existingManager != null)
         {
-            return;
+            instance = existingManager;
         }
-
-        GameObject managerObject = new GameObject("MainMenuManager_Auto");
-        instance = managerObject.AddComponent<MainMenuManager>();
     }
 
     private void Awake()
@@ -79,15 +77,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name != TownSceneName)
-        {
-            enabled = false;
-            return;
-        }
-
-        EnsureEventSystem();
-        LoadMenuFont();
-        BuildRuntimeUI();
+        CacheMenuTextSlots();
         CloseMenuImmediate();
     }
 
@@ -96,11 +86,6 @@ public class MainMenuManager : MonoBehaviour
         if (instance == this)
         {
             instance = null;
-        }
-
-        if (Time.timeScale == 0f)
-        {
-            Time.timeScale = 1f;
         }
     }
 
@@ -113,7 +98,7 @@ public class MainMenuManager : MonoBehaviour
 
         if (!isMenuOpen)
         {
-            if (Input.GetKeyDown(KeyCode.C))
+            if (GameInput.MenuPressed && CanOpenMenu())
             {
                 OpenMenu();
             }
@@ -121,225 +106,169 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.X))
+        if (GameInput.MenuPressed || GameInput.CancelPressed)
         {
-            CloseMenu();
+            CloseMenu(true);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (GameInput.UpPressed)
         {
             ChangeSelection(-1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (GameInput.DownPressed)
         {
             ChangeSelection(1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
             ExecuteSelection();
         }
     }
 
-    private void EnsureEventSystem()
+    private void CacheMenuTextSlots()
     {
-        if (FindObjectOfType<EventSystem>() != null)
+        menuTexts[0] = statusText;
+        menuTexts[1] = equipmentText;
+        menuTexts[2] = bagText;
+        menuTexts[3] = phoneText;
+        menuTexts[4] = closeText;
+    }
+
+    private bool CanOpenMenu()
+    {
+        if (!IsFieldMenuUnlocked() || IsDialogueOpen())
         {
-            return;
+            return false;
         }
 
-        GameObject eventSystemObject = new GameObject("EventSystem");
-        eventSystemObject.AddComponent<EventSystem>();
-        eventSystemObject.AddComponent<StandaloneInputModule>();
-    }
-
-    private void BuildRuntimeUI()
-    {
-        canvasObject = new GameObject("Canvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-        Canvas canvas = canvasObject.GetComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 500;
-
-        CanvasScaler scaler = canvasObject.GetComponent<CanvasScaler>();
-        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        scaler.referenceResolution = new Vector2(1920f, 1080f);
-        scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-        scaler.matchWidthOrHeight = 0.5f;
-
-        menuRoot = CreateUIObject("MenuRoot", canvasObject.transform);
-        RectTransform rootRect = menuRoot.GetComponent<RectTransform>();
-        StretchToFullScreen(rootRect);
-
-        GameObject infoPanel = CreatePanel("InfoPanel", menuRoot.transform, new Vector2(32f, -32f), new Vector2(560f, 210f));
-        nameText = CreateText("NameText", infoPanel.transform, "이름:", new Vector2(24f, -24f));
-        hpText = CreateText("HPText", infoPanel.transform, "HP:", new Vector2(24f, -84f));
-        goldText = CreateText("GoldText", infoPanel.transform, "G:", new Vector2(24f, -144f));
-
-        GameObject commandPanel = CreatePanel("CommandPanel", menuRoot.transform, new Vector2(32f, -260f), new Vector2(560f, 300f));
-
-        TextMeshProUGUI statusText = CreateText("StatusText", commandPanel.transform, menuItems[0], new Vector2(90f, -30f));
-        TextMeshProUGUI bagText = CreateText("BagText", commandPanel.transform, menuItems[1], new Vector2(90f, -96f));
-        TextMeshProUGUI saveText = CreateText("SaveText", commandPanel.transform, menuItems[2], new Vector2(90f, -162f));
-        TextMeshProUGUI quitText = CreateText("QuitText", commandPanel.transform, menuItems[3], new Vector2(90f, -228f));
-
-        commandTexts[0] = statusText;
-        commandTexts[1] = bagText;
-        commandTexts[2] = saveText;
-        commandTexts[3] = quitText;
-
-        GameObject cursor = CreateUIObject("Cursor", commandPanel.transform);
-        cursorRect = cursor.GetComponent<RectTransform>();
-        cursorRect.anchorMin = new Vector2(0f, 1f);
-        cursorRect.anchorMax = new Vector2(0f, 1f);
-        cursorRect.pivot = new Vector2(0f, 1f);
-        cursorRect.anchoredPosition = new Vector2(30f, -30f);
-        cursorRect.sizeDelta = new Vector2(50f, 50f);
-
-        TextMeshProUGUI cursorText = cursor.AddComponent<TextMeshProUGUI>();
-        cursorText.text = ">";
-        cursorText.color = Color.white;
-        cursorText.fontSize = 42f;
-        cursorText.alignment = TextAlignmentOptions.MidlineLeft;
-
-        GameObject descriptionPanel = CreatePanel("DescriptionPanel", menuRoot.transform, new Vector2(32f, 32f), new Vector2(1856f, 220f));
-        RectTransform descriptionRect = descriptionPanel.GetComponent<RectTransform>();
-        descriptionRect.anchorMin = new Vector2(0f, 0f);
-        descriptionRect.anchorMax = new Vector2(0f, 0f);
-        descriptionRect.pivot = new Vector2(0f, 0f);
-
-        descriptionText = CreateText("DescriptionText", descriptionPanel.transform, string.Empty, new Vector2(24f, -24f));
-        descriptionText.rectTransform.sizeDelta = new Vector2(1800f, 170f);
-        descriptionText.enableWordWrapping = true;
-    }
-
-    private GameObject CreatePanel(string name, Transform parent, Vector2 anchoredPosition, Vector2 size)
-    {
-        GameObject panel = CreateUIObject(name, parent);
-        RectTransform rect = panel.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0f, 1f);
-        rect.anchorMax = new Vector2(0f, 1f);
-        rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = size;
-
-        Image background = panel.AddComponent<Image>();
-        background.color = new Color(0f, 0f, 0f, 0.92f);
-
-        Outline outline = panel.AddComponent<Outline>();
-        outline.effectColor = Color.white;
-        outline.effectDistance = new Vector2(2f, -2f);
-
-        return panel;
-    }
-
-    private TextMeshProUGUI CreateText(string name, Transform parent, string value, Vector2 anchoredPosition)
-    {
-        GameObject textObject = CreateUIObject(name, parent);
-        RectTransform rect = textObject.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0f, 1f);
-        rect.anchorMax = new Vector2(0f, 1f);
-        rect.pivot = new Vector2(0f, 1f);
-        rect.anchoredPosition = anchoredPosition;
-        rect.sizeDelta = new Vector2(480f, 60f);
-
-        TextMeshProUGUI text = textObject.AddComponent<TextMeshProUGUI>();
-        if (menuFont != null)
+        if (playerController == null)
         {
-            text.font = menuFont;
+            playerController = FindObjectOfType<PlayerController>();
         }
-        text.text = value;
-        text.color = Color.white;
-        text.fontSize = 42f;
-        text.alignment = TextAlignmentOptions.Left;
 
-        return text;
+        return playerController == null || !playerController.IsAutoMoving;
     }
 
-    private GameObject CreateUIObject(string name, Transform parent)
+    private bool IsFieldMenuUnlocked()
     {
-        GameObject obj = new GameObject(name, typeof(RectTransform));
-        obj.transform.SetParent(parent, false);
-        return obj;
+        if (GameManager.Instance == null)
+        {
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(menuUnlockFlagId))
+        {
+            return GameManager.Instance.IsFieldMenuUnlocked();
+        }
+
+        return GameManager.Instance.HasStoryFlag(menuUnlockFlagId);
     }
 
-    private void StretchToFullScreen(RectTransform rect)
+    private bool IsDialogueOpen()
     {
-        rect.anchorMin = Vector2.zero;
-        rect.anchorMax = Vector2.one;
-        rect.offsetMin = Vector2.zero;
-        rect.offsetMax = Vector2.zero;
+        if (dialogueController == null)
+        {
+            dialogueController = FindObjectOfType<DialogueController>(true);
+        }
+
+        return dialogueController != null && dialogueController.IsOpen;
     }
 
     private void OpenMenu()
     {
-        if (menuRoot == null)
+        if (mainMenuUI == null)
         {
             return;
         }
 
         isMenuOpen = true;
         selectedIndex = 0;
-        menuRoot.SetActive(true);
-        Time.timeScale = 0f;
-
-        RefreshInfoText();
+        mainMenuUI.SetActive(true);
+        SetPlayerCanMove(false);
+        RefreshCharacterStatusSlot();
         UpdateSelectionVisual();
-        UpdateDescriptionDefault();
     }
 
-    private void CloseMenu()
+    private void CloseMenu(bool restorePlayerMovement)
     {
         isMenuOpen = false;
-        menuRoot.SetActive(false);
-        Time.timeScale = 1f;
+
+        if (mainMenuUI != null)
+        {
+            mainMenuUI.SetActive(false);
+        }
+
+        if (restorePlayerMovement)
+        {
+            SetPlayerCanMove(true);
+        }
     }
 
     private void CloseMenuImmediate()
     {
         isMenuOpen = false;
-        if (menuRoot != null)
+
+        if (mainMenuUI != null)
         {
-            menuRoot.SetActive(false);
+            mainMenuUI.SetActive(false);
+        }
+    }
+
+    private void SetPlayerCanMove(bool canMove)
+    {
+        if (playerController == null)
+        {
+            playerController = FindObjectOfType<PlayerController>();
         }
 
-        Time.timeScale = 1f;
+        if (playerController != null)
+        {
+            playerController.SetCanMove(canMove);
+        }
+    }
+
+    private void RefreshCharacterStatusSlot()
+    {
+        if (characterStatusSlot == null)
+        {
+            characterStatusSlot = FindObjectOfType<CharacterStatusSlotUI>(true);
+        }
+
+        if (characterStatusSlot != null)
+        {
+            characterStatusSlot.Refresh();
+        }
     }
 
     private void ChangeSelection(int delta)
     {
-        selectedIndex = (selectedIndex + delta + menuItems.Length) % menuItems.Length;
+        selectedIndex = (selectedIndex + delta + MenuItemCount) % MenuItemCount;
         UpdateSelectionVisual();
-        UpdateDescriptionDefault();
     }
 
     private void UpdateSelectionVisual()
     {
-        for (int i = 0; i < commandTexts.Length; i++)
+        for (int i = 0; i < menuTexts.Length; i++)
         {
-            if (commandTexts[i] == null)
-            {
-                continue;
-            }
-
-            commandTexts[i].color = Color.white;
+            SetTextPosition(menuTexts[i], i == selectedIndex ? SelectedTextX : UnselectedTextX, SlotYPositions[i]);
         }
 
-        if (cursorRect != null && commandTexts[selectedIndex] != null)
-        {
-            Vector2 targetPos = commandTexts[selectedIndex].rectTransform.anchoredPosition;
-
-            // 메뉴 글자보다 살짝 왼쪽에 커서를 둔다.
-            cursorRect.anchoredPosition = new Vector2(targetPos.x - 42f, targetPos.y);
-        }
+        SetTextPosition(cursor, CursorX, SlotYPositions[selectedIndex]);
     }
 
-    private void UpdateDescriptionDefault()
+    private void SetTextPosition(RectTransform rectTransform, float x, float y)
     {
-        SetDescription(menuDescriptions[selectedIndex]);
+        if (rectTransform == null)
+        {
+            return;
+        }
+
+        rectTransform.anchoredPosition = new Vector2(x, y);
     }
 
     private void ExecuteSelection()
@@ -347,131 +276,43 @@ public class MainMenuManager : MonoBehaviour
         switch (selectedIndex)
         {
             case 0:
-                ShowStatusDetails();
+                Debug.Log("상태 선택");
                 break;
             case 1:
-                SetDescription("아직 가진 물건이 없습니다.");
+                Debug.Log("장비 선택");
                 break;
             case 2:
-                SaveCurrentGameState();
-                SetDescription("저장했습니다.");
+                Debug.Log("가방 선택");
                 break;
             case 3:
-                Time.timeScale = 1f;
-
-                if (BGMManager.Instance != null)
-                {
-                    BGMManager.Instance.StopAndDestroy();
-                }
-
-                SceneManager.LoadScene(GameManager.BootSceneName);
+                StartPhoneEvent();
+                break;
+            case 4:
+                CloseMenu(true);
                 break;
         }
     }
 
-    private void ShowStatusDetails()
+    private void StartPhoneEvent()
     {
-        if (GameManager.Instance == null)
+        if (phoneEventRunner == null || phoneEventSequence == null)
         {
-            SetDescription("GameManager를 찾을 수 없습니다.");
+            Debug.LogWarning("MainMenuManager: 통화용 GameEventRunner 또는 GameEventSequence가 연결되지 않았습니다.");
             return;
         }
 
-        SetDescription(
-        $"LV {GameManager.Instance.level}\n" +
-        $"EXP {GameManager.Instance.exp}\n" +
-        $"HP {GameManager.Instance.currentHP} / {GameManager.Instance.maxHP}\n" +
-        $"MP {GameManager.Instance.currentMP} / {GameManager.Instance.maxMP}\n" +
-        $"공격력 {GameManager.Instance.attack}\n" +
-        $"방어력 {GameManager.Instance.defense}\n" +
-        $"마법공격력 {GameManager.Instance.magicAttack}\n" +
-        $"마법방어력 {GameManager.Instance.magicDefense}\n" +
-        $"스피드 {GameManager.Instance.speed}\n" +
-        $"행운 {GameManager.Instance.luck}");
-    }
-
-    private void SaveCurrentGameState()
-    {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogWarning("MainMenuManager: GameManager가 없어 저장할 수 없습니다.");
-            return;
-        }
-
-        // 현재 씬 이름 저장
-        GameManager.Instance.currentSceneName = SceneManager.GetActiveScene().name;
-
-        // Player 찾기
-        GameObject playerObject = null;
-
-        // 1순위: Player 태그
-        try
-        {
-            playerObject = GameObject.FindGameObjectWithTag("Player");
-        }
-        catch
-        {
-            // Player 태그가 아예 없을 때 예외 방지
-        }
-
-        // 2순위: 이름이 Player인 오브젝트
-        if (playerObject == null)
-        {
-            playerObject = GameObject.Find("Player");
-        }
-
-        // 3순위: PlayerController 컴포넌트 기준
-        if (playerObject == null)
-        {
-            PlayerController playerController = FindObjectOfType<PlayerController>();
-            if (playerController != null)
-            {
-                playerObject = playerController.gameObject;
-            }
-        }
-
-        if (playerObject != null)
-        {
-            Vector2 pos = playerObject.transform.position;
-            GameManager.Instance.playerPosition = pos;
-
-            Debug.Log($"플레이어 위치 저장: {pos}");
-        }
-        else
-        {
-            Debug.LogWarning("MainMenuManager: Player 오브젝트를 찾지 못해 위치 저장을 생략합니다.");
-        }
-
-        SaveSystem.SaveGame();
-    }
-
-    private void RefreshInfoText()
-    {
-        if (GameManager.Instance == null)
+        if (phoneEventRunner.IsRunning)
         {
             return;
         }
 
-        nameText.text = $"이름: {GameManager.Instance.playerName}";
-        hpText.text = $"HP: {GameManager.Instance.currentHP} / {GameManager.Instance.maxHP}";
-        goldText.text = $"G: {GameManager.Instance.gold}";
-    }
-
-    private void SetDescription(string message)
-    {
-        if (descriptionText != null)
+        if (playerController == null)
         {
-            descriptionText.text = message;
+            playerController = FindObjectOfType<PlayerController>();
         }
-    }
 
-    private void LoadMenuFont()
-    {
-        menuFont = Resources.Load<TMP_FontAsset>("Fonts/HMKMMAG SDF");
-
-        if (menuFont == null)
-        {
-            Debug.LogWarning("MainMenuManager: 한글 TMP Font Asset을 찾지 못했습니다. Resources/Fonts 경로와 파일명을 확인하세요.");
-        }
+        phoneEventRunner.SetPlayerController(playerController);
+        CloseMenu(false);
+        phoneEventRunner.Run(phoneEventSequence, () => SetPlayerCanMove(true));
     }
 }

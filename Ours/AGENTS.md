@@ -1,156 +1,162 @@
 # AGENTS.md
 
-이 문서는 이 저장소에서 작업하는 AI 코딩 에이전트용 작업 지침서다.
+이 문서는 이 저장소를 수정하는 AI 코딩 에이전트용 작업 규칙이다.
 
-## 작업 시작 전 필수 읽기 순서
+## 1. 시작 절차
+
+작업 전 필요한 문서만 읽는다.
 
 1. `README.md`
-2. `AGENTS.md`
-3. `PROJECT_GUIDE.md`
-4. `TODO.md`
-5. `Docs/CURRENT_STATE.md`
-6. 작업과 관련된 `Docs/*.md`
+2. `Docs/ARCHITECTURE.md`
+3. 작업 대상 문서 1개
+4. 위험/정리 작업이면 `Docs/RISK_REGISTER.md`
 
-## 기본 작업 절차
+불필요하게 모든 문서를 읽어 토큰을 소모하지 않는다.
 
-1. 요청 내용을 확인한다.
-2. 필수 문서를 먼저 읽는다.
-3. 관련 스크립트와 씬 구조를 분석한다.
-4. 수정 전에 어떤 파일을 바꿀지 요약한다.
-5. 필요한 최소 파일만 수정한다.
-6. 기존 구조를 임의로 갈아엎지 않는다.
-7. 수정 후 변경 파일 목록을 정리한다.
-8. Unity에서 확인해야 할 Inspector 연결값과 테스트 절차를 알려준다.
+## 2. 기본 작업 원칙
 
-## 절대 규칙
+- 요청 범위 밖의 리팩터링 금지.
+- 동작 중인 씬/시스템의 구조를 임의로 갈아엎지 않는다.
+- 가능한 최소 파일만 수정한다.
+- Scene/Prefab/YAML 직접 수정은 사용자가 명시적으로 요청하지 않는 한 금지.
+- 기존 스크립트는 삭제/재생성하지 않는다.
+- 파일명, public class명, `.meta` 보존.
+- 기존 SerializedField 이름 변경은 최소화한다.
+- Inspector에서 이미 저장된 값은 코드 기본값 변경으로 갱신되지 않는다는 점을 항상 고려한다.
+- 수정 후 `dotnet build Ours.sln` 실행.
 
-### 씬 명칭 기준
+## 3. 현재 씬 기준
 
-향후 목표 명칭은 아래를 기준으로 한다.
+정식 명칭:
 
-- `BootScene`: 게임 실행 첫 씬. 인트로, 타이틀 메뉴, 이름 입력 담당.
-- `TownScene`: 기존 `MainScene` 역할. 마을 필드 담당.
-- `BattleScene`: 전투 씬. 이름 유지.
+- `ForestScene`
+- `TitleScene`
+- `TownScene`
+- `BattleScene`
+
+레거시 문자열 호환은 `GameManager.NormalizeSceneName()` 등에서 처리할 수 있다.
+
+- `Title` / `BootScene` → `TitleScene`
+- `MainScene` → `TownScene`
+
+`BootSceneController.cs` / `BootSceneController` 클래스명은 **Inspector 안전을 위해 현재 유지**한다. 씬 이름이 `TitleScene`이라고 해서 파일/클래스를 임의로 rename하지 않는다.
+
+## 4. 입력 규칙
+
+게임 전체 기본:
+
+- 방향키 — 이동/UI 선택
+- `C` — 확인/결정/대화 진행
+- `X` — 취소/뒤로가기
+- `A` — 필드 메뉴
 
 주의:
-- 현재 프로젝트에는 기존 `Title`, `MainScene` 이름이 남아 있을 수 있다.
-- 실제 씬 파일명 변경은 관련 문자열 참조를 분석한 뒤 진행한다.
-- `"MainScene"`, `"Title"` 같은 하드코딩 문자열을 바꿀 때는 `GameManager`, `BattleManager`, `EnemyController`, `MainMenuManager`, `SceneFadeIn`, `PlayerLoader`, `SaveData`, `SaveSystem`을 함께 확인한다.
-- 저장 파일에 옛 씬 이름이 남아 있을 수 있으므로 호환 처리도 고려한다.
 
-### BootScene 작업 규칙
+- 개발용 `0` 저장 삭제 단축키는 유지.
+- 텍스트 입력창(TMP_InputField)에서 C/X/A 입력 충돌 여부를 확인한다.
+- 새 Input System으로 마이그레이션하지 않는다. 현재 입력 방식은 기존 `Input` API를 유지한다.
 
-- BootScene은 Codex가 완성 연출까지 만들지 않는다.
-- Codex는 기능 뼈대만 구현한다.
-- 지구 이미지, 로고 위치, 폰트, 페이드 타이밍, BGM, 세부 연출은 사용자가 Unity Editor에서 직접 다듬는다.
-- 지구본 회전/축소/이동은 Inspector에서 조정 가능한 SerializedField 기반으로 만든다.
-- 저장 데이터가 없으면 이어하기는 반투명 표시하고 선택 불가 처리한다.
-- 처음부터 선택 시 기존 이름 입력 흐름을 재사용한다.
-- 종료는 빌드에서는 Application.Quit, 에디터에서는 로그 처리한다.
+## 5. 첫 실행 / Title / Forest 규칙
 
-### 전투 입력 구조
+기술적 엔트리 씬은 `TitleScene`이다.
 
-- `BattleManager`의 `Command Text` 방식은 사용하지 않는다.
-- `BattleManager` 인스펙터의 `Command Text` 칸은 반드시 `None`으로 유지한다.
-- BattleScene 커맨드 입력은 `CommandSelector`가 담당한다.
-- SkillPanel 입력은 `SkillSelector`가 담당한다.
-- `CommandSelector`와 `SkillSelector` 역할을 섞지 않는다.
-- `BattleManager`는 실제 전투 행동 실행만 담당한다.
+- 유효 저장 없음 + 이름 선택 세션 없음 → 즉시 `ForestScene`
+- 유효 저장 있음 → Forest 건너뛰고 기존 Title 흐름
+- Forest에서 이름 선택 완료(`NameChosen`) → `TitleScene`
+- Title의 New Game은 pending name을 사용해 현재는 `TownScene`으로 시작
 
-### 전투 데이터 구조
+Forest 전용 연출을 일반 시스템으로 무리하게 승격하지 않는다.
 
-- 플레이어 상태는 `GameManager` 기준으로 관리한다.
-- 적 원본 데이터는 `EnemyData` ScriptableObject 기준으로 관리한다.
-- 스킬 원본 데이터는 `SkillData` ScriptableObject 기준으로 관리한다.
-- 필드 적은 자기 `EnemyData`를 가진다.
-- 전투 진입 시 `EnemyController`가 `GameManager.currentBattleEnemy`에 EnemyData를 전달한다.
-- 구 구조인 `PlayerManager`, `PlayerStats`에 의존하는 코드를 되살리지 않는다.
+특히:
 
-### BattleScene UI 구조
+- `ForestPrologueEvent`는 Forest 프롤로그 연출 담당.
+- `ForestNameEntryController`는 Forest 이름 입력 전용.
+- `TitleManager`의 옛 이름 입력/시놉시스 코드는 레거시 호환 때문에 당장 삭제하지 않는다.
 
-```text
-Canvas
-├── BattleBG
-│   └── AnimatedBG
-│       └── Raw Image
-├── EnemyLayer
-│   └── Enemy Image
-├── EffectLayer
-├── BattleUI
-│   ├── MessagePanel
-│   ├── CommandPanel
-│   ├── SkillPanel
-│   └── StatusPanel
-├── GameOverPanel
-└── FadePanel
-    └── FadeOverlay
-```
+## 6. Forest 카메라 규칙
 
-- `EffectLayer`는 SkillData의 effectPrefab을 런타임 생성하는 부모다.
-- `BattleUI`, `GameOverPanel`, `FadePanel` 역할을 섞지 않는다.
+- Map1~3: 고정 카메라.
+- Map4: `Map4CameraFollowZone`에서 Y축만 추적.
+- Zone 진입: smooth catch-up → 따라잡으면 instant follow.
+- X축은 `CameraPoint_4.x` 고정.
+- Zone 이탈: fixed point로 부드럽게 복귀.
+- UFO 이벤트: CameraFollow만 끄고 Main Camera/Camera 컴포넌트는 끄지 않는다.
 
-### BGM 구조
+`CameraFollow`는 일반 기능을 보존한다.
 
-- TownScene의 `BGM_Manager`에는 `BGMManager`가 붙어 있다.
-- 전투 진입 시 Town BGM은 `PauseBGM()`으로 멈춘다.
-- 전투 종료 후 TownScene 복귀 시 `ResumeBGM()`으로 이어서 재생한다.
-- BattleScene의 `Battle_BGM`에는 `BGMManager`를 붙이지 않는다.
-- 게임오버에서 그만하기 선택 시 `BGMManager.StopAndDestroy()` 후 BootScene/Title 씬으로 이동한다.
-- BootScene 인트로 BGM은 별도 AudioSource로 둘 수 있으며 기존 BGMManager와 충돌하지 않게 한다.
+- `SnapToTarget()` 존재.
+- `instantFollow`, `followX`, `followY` 옵션 존재.
+- Town 등 일반 탐험 씬에서 재사용 가능.
 
-### 저장 시스템
+## 7. Forest 페이드/밤 규칙
 
-- 저장 시스템 수정 시 반드시 `GameManager.cs`, `SaveData.cs`, `SaveSystem.cs`, `PlayerLoader.cs`를 함께 확인한다.
-- `SaveData`에 필드를 추가하면 `GameManager.GetSaveData()`와 `GameManager.LoadFromSaveData()`에도 반영한다.
-- 플레이어 방향 저장 / 복원은 구현되어 있다.
-- 배운 스킬 ID 목록은 저장 대상이다.
+역할 분리:
 
-### Enemy 시스템
+- `NightOverlay` — Forest 밤 분위기. 코드 제어하지 않는 고정 남색 반투명 Image.
+- `FadeOverlay` — 검정 화면 전환 전용.
 
-- 도망 시 `escapedEnemyId`를 사용해 해당 적을 3초간 접촉 무시 / 깜빡임 / 이동 정지 처리한다.
-- 승리 후에는 `defeatedEnemyId`를 사용해 해당 적을 TownScene 복귀 시 숨기고 10초 후 리스폰한다.
-- `encounterId`는 필드 적마다 고유해야 한다.
+FadeOverlay:
 
-## Unity Inspector 체크가 필요한 경우
+- Forest 시작: `1 → 0`
+- 맵 전환: `0 → 1 → 0`
+- 이름 확정: `0 → 1`
 
-### BattleManager
+`nightOverlayAlpha` 필드가 남아 있어도 호환용이다. FadeOverlay 복귀값으로 다시 사용하지 않는다.
 
-- `Message Panel` → `Canvas/BattleUI/MessagePanel`
-- `Command Panel` → `Canvas/BattleUI/CommandPanel`
-- `Skill Panel` → `Canvas/BattleUI/SkillPanel`
-- `Status Panel` → `Canvas/BattleUI/StatusPanel`
-- `Enemy Image` → `Canvas/EnemyLayer/Enemy Image`
-- `Command Text = None`
-- `Skill Selector`
-- `PK Heal Skill`
-- `PK Thunder Skill`
-- `Effect Layer` → `Canvas/EffectLayer`
-- `Fade Image` → `Canvas/FadePanel/FadeOverlay`
-- `Battle Bgm Source` → `Battle_BGM`의 AudioSource
+## 8. 전투 규칙
 
-### EnemyController
+- `BattleManager`는 행동 실행 중심.
+- 커맨드 UI 입력: `CommandSelector`.
+- 스킬 UI 입력: `SkillSelector`.
+- `BattleManager.commandText` 레거시 경로는 사용하지 않는다.
+- BattleManager Inspector의 `Command Text`는 `None` 유지.
+- `EnemyData`가 적 원본 데이터.
+- `SkillData`가 스킬 원본 데이터.
+- 필드 `EnemyController`가 전투 진입 전 `GameManager.currentBattleEnemy` 등을 설정한다.
 
-- `Enemy Data`
-- `Battle Scene Name`
-- `Encounter Id`
-- `Battle Transition Effect`
-- `Defeated Respawn Seconds`
+BattleScene 관련 정리 작업은 `Docs/RISK_REGISTER.md` 확인 후 진행한다.
 
-## 작업 완료 보고 형식
+## 9. 저장 / GameManager 규칙
+
+저장 수정 시 같이 확인:
+
+- `GameManager.cs`
+- `SaveData.cs`
+- `SaveSystem.cs`
+- `PlayerLoader.cs`
+- 저장을 호출하는 메뉴 코드
+
+현재:
+
+- `GameManager`는 Runtime Bootstrap으로 어느 씬에서 직접 Play해도 생성 가능.
+- `SaveSystem.HasValidSaveData()` 사용.
+- `StartupSessionState`와 `pendingPlayerName`은 런타임 세션 정보이며 저장 파일과 별개.
+- 저장 데이터가 없고 앱을 종료하면 다음 실행에 Forest를 다시 보는 것이 의도된 동작.
+
+## 10. BGM 규칙
+
+- Town의 `BGMManager`는 전투 진입 시 Pause, 복귀 시 Resume.
+- Battle_BGM에 Town용 `BGMManager`를 붙이지 않는다.
+- Forest는 독립 AudioSource들을 사용하며 프롤로그 연출과 결합되어 있다.
+- 이름 확정 후 Forest → Title 전환 시 Forest BGM은 화면 Fade와 함께 0으로 줄어든다.
+
+## 11. 작업 완료 보고
+
+길게 설명하지 말고 아래만 보고한다.
 
 ```text
-수정한 파일:
+수정 파일:
 - ...
 
 핵심 변경:
 - ...
 
-Unity에서 확인할 Inspector 연결:
+Inspector에서 확인할 것:
 - ...
 
-테스트 방법:
-1. ...
+빌드:
+- 경고 N / 오류 N
 
-주의:
-- ...
+주의 또는 충돌 가능성:
+- 있을 때만 작성
 ```

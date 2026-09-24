@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
+public class InventoryEntry
+{
+    public string itemId;
+    public int count;
+}
+
+[System.Serializable]
 public class SaveData
 {
     public string playerName; // 플레이어 이름
@@ -33,4 +40,7 @@ public class SaveData
     public bool ratBossDefeated;        // 래트킹 처치 플래그 여부
 
     public List<string> learnedSkillIds; // 습득한 스킬 ID 목록
+    public List<InventoryEntry> inventoryItems;
+    public string equippedWeaponItemId;
+    public List<string> storyFlags;
 }

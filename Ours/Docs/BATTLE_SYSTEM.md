@@ -1,6 +1,10 @@
 # BATTLE_SYSTEM
 
-## 관련 파일
+BattleScene의 현재 책임과 수정 안전선을 정리한다.
+
+## 1. 관련 파일
+
+대표:
 
 - `Assets/Scripts/Battle/BattleManager.cs`
 - `Assets/Scripts/CommandSelector.cs`
@@ -12,58 +16,67 @@
 - `Assets/Data/Skills/*.asset`
 - `Assets/Prefabs/Effects/*.prefab`
 
-## BattleScene UI 구조
+## 2. UI 구조
 
 ```text
 Canvas
-├── BattleBG
-├── EnemyLayer
-├── EffectLayer
-├── BattleUI
-│   ├── MessagePanel
-│   ├── CommandPanel
-│   ├── SkillPanel
-│   └── StatusPanel
-├── GameOverPanel
-└── FadePanel
+├ BattleBG
+├ EnemyLayer
+│  └ Enemy Image
+├ EffectLayer
+├ BattleUI
+│  ├ MessagePanel
+│  ├ CommandPanel
+│  ├ SkillPanel
+│  └ StatusPanel
+├ GameOverPanel
+└ FadePanel
+   └ FadeOverlay
 ```
 
 역할:
-- `BattleBG`: 전투 배경 애니메이션 담당
-- `EnemyLayer/Enemy Image`: 적 스프라이트 표시
-- `EffectLayer`: 스킬 이펙트 프리팹 런타임 생성 위치
-- `BattleUI`: 일반 전투 UI 묶음
-- `GameOverPanel`: 게임오버 UI
-- `FadePanel/FadeOverlay`: 씬 전환 페이드
 
-## 구현된 스킬
+- `BattleBG` — 전투 배경.
+- `EnemyLayer/Enemy Image` — 적 표시.
+- `EffectLayer` — SkillData effectPrefab 생성 부모.
+- `BattleUI` — 일반 전투 UI.
+- `GameOverPanel` — 게임오버 선택.
+- `FadePanel/FadeOverlay` — 전투 씬 Fade.
 
-### PK회복
+## 3. 입력 책임
 
-- 습득 레벨: Lv2
-- 타입: Heal
-- 대상: Self
-- 효과: HP 회복
+현재 기본 입력은 C/X.
 
-### PK썬더
+- `CommandSelector` — 커맨드 선택/결정.
+- `SkillSelector` — 스킬 목록 선택/결정/취소.
+- `BattleManager` — 실제 행동 실행과 전투 상태.
 
-- 습득 레벨: Lv2
-- 타입: MagicAttack
-- 대상: SingleEnemy
-- 속성: Thunder
-- MP 소모: 4
-- 데미지 공식:
+`BattleManager.commandText` 기반 레거시 입력 경로는 사용하지 않는다.
 
-```csharp
-Mathf.Max(3, GameManager.Instance.magicAttack * 2 - enemyData.magicDefense)
-```
+**Inspector의 `Command Text`는 None 유지.**
 
-- SkillData의 effectPrefab으로 이펙트 재생 가능
-- SFX는 SkillData.sfx로 연결 가능
+## 4. 현재 구현
 
-## SkillData 구조
+- 일반 공격
+- 스킬 선택
+- PK회복
+- PK썬더
+- MP 소모
+- 스피드 기반 선공
+- 도망
+- 경험치/골드
+- 레벨업
+- 스킬 습득/저장
+- 승리/도망/게임오버 Fade
+- 게임오버 패널
+- 다시 일어서기 / 그만하기
+- 전투 배경 애니메이션
+- SkillData effectPrefab/SFX 재생 구조
 
-주요 필드:
+## 5. SkillData
+
+대표 필드:
+
 - skillId
 - skillName
 - description
@@ -77,29 +90,86 @@ Mathf.Max(3, GameManager.Instance.magicAttack * 2 - enemyData.magicDefense)
 - sfx
 - effectDuration
 
-## 스킬 이펙트 흐름
+기본 흐름:
 
 ```text
-SkillSelector
+CommandSelector
+→ SkillPanel
+→ SkillSelector
 → BattleManager.OnSkillSelected(skill)
-→ PlayerSkillRoutine(skill)
-→ SkillData.effectPrefab이 있으면 EffectLayer 아래 Instantiate
-→ SkillData.sfx 재생
-→ effectDuration 대기
-→ effectPrefab Destroy
-→ 데미지/회복 메시지 출력
+→ SkillData 참조
+→ EffectLayer에 effectPrefab 생성
+→ SFX
+→ 효과 적용
 ```
 
-PKThunderEffect 프리팹은 하이어라키에 상시 배치하지 않는다.
-Project의 `Assets/Prefabs/Effects`에 프리팹으로 두고 필요할 때 생성한다.
+프리팹 이펙트는 Scene에 상시 배치하지 않는다.
 
-## 게임오버 흐름
+## 6. EnemyData
 
-1. 모든 플레이어가 전투불능 상태가 된다.
-2. `모두 쓰러졌다...` 메시지가 나온다.
-3. Z 입력 시 현재 화면을 유지한 채 FadeOut.
-4. Battle_BGM이 서서히 줄어들다 정지한다.
-5. 암전 중 GameOverPanel을 준비한다.
-6. FadeIn으로 게임오버 선택 화면을 보여준다.
-7. 다시 일어서기 선택 시 마지막 저장 데이터를 불러온다.
-8. 그만하기 선택 시 BGMManager를 정리하고 BootScene/Title로 이동한다.
+Field Enemy의 `EnemyController`가 자기 EnemyData를 가지고 전투 직전 GameManager에 전달한다.
+
+BattleManager는 전달된 데이터로 전투 적을 구성한다.
+
+구 PlayerManager/PlayerStats 계열을 다시 전투 원본으로 되살리지 않는다.
+
+## 7. BGM
+
+- Town BGM은 Battle 진입 시 Pause.
+- `Battle_BGM`은 독립 AudioSource.
+- Battle_BGM 오브젝트에 Town의 `BGMManager`를 붙이지 않는다.
+- Town 복귀 시 persistent Town BGM Resume.
+
+게임오버에서 Title로 빠질 때 persistent BGM 정리 흐름을 유지한다.
+
+## 8. 게임오버
+
+현재 흐름 개념:
+
+```text
+전투불능
+↓
+메시지
+↓ C
+Fade Out / Battle BGM 감소
+↓
+GameOverPanel
+↓
+다시 일어서기 / 그만하기
+```
+
+### 위험
+
+게임오버 coroutine이 조건에 따라 중복 시작될 가능성이 과거 점검에서 발견됐다.
+
+수정 시:
+
+- bool guard 또는 단일 coroutine handle로 중복 진입을 막는 소규모 안전 패치를 우선.
+- 게임오버 UX 자체를 동시에 재설계하지 않는다.
+
+## 9. Inspector 핵심 체크
+
+BattleManager:
+
+- Message Panel → BattleUI/MessagePanel
+- Command Panel → BattleUI/CommandPanel
+- Skill Panel → BattleUI/SkillPanel
+- Status Panel → BattleUI/StatusPanel
+- Enemy Image → EnemyLayer/Enemy Image
+- Command Text → **None**
+- Skill Selector → 실제 SkillSelector
+- Effect Layer → Canvas/EffectLayer
+- Fade Image → FadePanel/FadeOverlay
+- Battle Bgm Source → Battle_BGM AudioSource
+
+## 10. 확장 예정
+
+- 방어
+- 아이템
+- 적 마법
+- 회피/명중
+- 추가 스킬/상태
+- 보스전
+- 파티 전투
+
+기존 CommandSelector/SkillSelector 책임을 유지한 상태에서 확장한다.

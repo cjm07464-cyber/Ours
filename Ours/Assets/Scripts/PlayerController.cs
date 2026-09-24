@@ -1,154 +1,309 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private enum FacingDirection
+    {
+        Down,
+        Left,
+        Right,
+        Up
+    }
+
     [Header("Movement")]
-    public float moveSpeed = 1.5f;
+    [SerializeField] private float moveSpeed = 3.5f;
 
     [Header("Sprites")]
-    public Sprite downA; // 1
-    public Sprite downB; // 2
-    public Sprite up;    // 3 (flip)
-    public Sprite leftA; // 4
-    public Sprite leftB; // 5
-    public Sprite diagDownA; // 6
-    public Sprite diagDownB; // 7
-    public Sprite diagUpA;   // 8
-    public Sprite diagUpB;   // 9
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Sprite[] upSprites = new Sprite[4];
+    [SerializeField] private Sprite[] downSprites = new Sprite[4];
+    [SerializeField] private Sprite[] leftSprites = new Sprite[4];
+    [SerializeField] private Sprite[] rightSprites = new Sprite[4];
+    [SerializeField] private float animationInterval = 0.09f;
 
-    Vector2 inputDir;
-    SpriteRenderer sr;
+    private static readonly int[] WalkFrameSequence = { 1, 2, 3, 2 };
 
-    float animTimer;
-    bool animToggle;
-    public float animInterval = 0.2f;
+    private Rigidbody2D rb;
+    private Vector2 moveInput;
+    private FacingDirection facingDirection = FacingDirection.Right;
+    private float animationTimer;
+    private int walkFrameIndex;
+    private bool canMove = true;
+    private Vector2 autoMoveTarget;
+    private float autoMoveSpeed;
+    private Action autoMoveComplete;
 
-    void Start()
+    public bool IsAutoMoving { get; private set; }
+
+    private void Awake()
     {
-        sr = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+
+        if (spriteRenderer == null)
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
     }
 
-    void Update()
+    private void Start()
     {
-        if (Time.timeScale == 0f)
-        {
-            return;
-        }
+        ApplyIdleSprite();
+    }
+
+    private void Update()
+    {
         ReadInput();
-        Move();
-        Animate();
+        UpdateSpriteAnimation();
     }
 
-    void ReadInput()
+    private void FixedUpdate()
     {
-        inputDir = new Vector2(
-            Input.GetAxisRaw("Horizontal"),
-            Input.GetAxisRaw("Vertical")
-        ).normalized;
-
-        if (inputDir != Vector2.zero && GameManager.Instance != null)
+        if (rb == null)
         {
-            GameManager.Instance.playerFacingDirection = inputDir;
-        }
-    }
-
-    void Move()
-    {
-        transform.position += (Vector3)inputDir * moveSpeed * Time.deltaTime;
-    }
-
-    void Animate()
-    {
-        if (inputDir == Vector2.zero)
             return;
-
-        animTimer += Time.deltaTime;
-        if (animTimer >= animInterval)
-        {
-            animTimer = 0f;
-            animToggle = !animToggle;
         }
 
-        UpdateSprite();
+        if (IsAutoMoving)
+        {
+            UpdateAutoMove();
+            return;
+        }
+
+        Vector2 nextPosition = rb.position + moveInput * moveSpeed * Time.fixedDeltaTime;
+        rb.MovePosition(nextPosition);
     }
 
-    void UpdateSprite()
+    public void SetCanMove(bool value)
     {
-        ApplySpriteForDirection(inputDir);
+        canMove = value;
+
+        if (!canMove)
+        {
+            IsAutoMoving = false;
+            autoMoveComplete = null;
+            moveInput = Vector2.zero;
+            if (rb != null)
+            {
+                rb.velocity = Vector2.zero;
+                rb.angularVelocity = 0f;
+            }
+
+            ResetWalkAnimation();
+            ApplyIdleSprite();
+        }
     }
 
     public void ApplyFacingDirection(Vector2 direction)
     {
         if (direction.sqrMagnitude < 0.0001f)
         {
-            direction = Vector2.down;
+            direction = Vector2.right;
         }
 
-        inputDir = direction.normalized;
-        ApplySpriteForDirection(inputDir);
+        facingDirection = GetFacingDirection(direction);
+        moveInput = Vector2.zero;
+        ResetWalkAnimation();
+        ApplyIdleSprite();
+        UpdateGameManagerFacing();
+    }
 
-        if (GameManager.Instance != null)
+    public Vector2 GetDirection()
+    {
+        return moveInput;
+    }
+
+    public void AutoMoveTo(Vector2 targetPosition, float speed, Action onComplete = null)
+    {
+        if (rb == null)
         {
-            GameManager.Instance.playerFacingDirection = inputDir;
+            onComplete?.Invoke();
+            return;
+        }
+
+        autoMoveTarget = targetPosition;
+        autoMoveSpeed = Mathf.Max(0.01f, speed);
+        autoMoveComplete = onComplete;
+        IsAutoMoving = true;
+    }
+
+    private void ReadInput()
+    {
+        if (Time.timeScale == 0f || IsAutoMoving || !canMove)
+        {
+            if (!IsAutoMoving)
+            {
+                moveInput = Vector2.zero;
+            }
+
+            return;
+        }
+
+        moveInput = GameInput.MovementVector;
+
+        if (moveInput != Vector2.zero)
+        {
+            facingDirection = GetFacingDirection(moveInput);
+            UpdateGameManagerFacing();
         }
     }
 
-    private void ApplySpriteForDirection(Vector2 direction)
+    private void UpdateAutoMove()
     {
-        EnsureSpriteRenderer();
-        if (sr == null || direction == Vector2.zero)
+        Vector2 currentPosition = rb.position;
+        Vector2 toTarget = autoMoveTarget - currentPosition;
+
+        if (toTarget.sqrMagnitude <= 0.0001f)
+        {
+            FinishAutoMove();
+            return;
+        }
+
+        Vector2 direction = toTarget.normalized;
+        moveInput = direction;
+        facingDirection = GetFacingDirection(direction);
+        UpdateGameManagerFacing();
+
+        Vector2 nextPosition = Vector2.MoveTowards(
+            currentPosition,
+            autoMoveTarget,
+            autoMoveSpeed * Time.fixedDeltaTime);
+
+        rb.MovePosition(nextPosition);
+
+        if ((autoMoveTarget - nextPosition).sqrMagnitude <= 0.0001f)
+        {
+            FinishAutoMove();
+        }
+    }
+
+    private void FinishAutoMove()
+    {
+        IsAutoMoving = false;
+        moveInput = Vector2.zero;
+        ResetWalkAnimation();
+        ApplyIdleSprite();
+
+        Action callback = autoMoveComplete;
+        autoMoveComplete = null;
+        callback?.Invoke();
+    }
+
+    private FacingDirection GetFacingDirection(Vector2 direction)
+    {
+        if (Mathf.Abs(direction.x) >= Mathf.Abs(direction.y))
+        {
+            return direction.x < 0f ? FacingDirection.Left : FacingDirection.Right;
+        }
+
+        return direction.y < 0f ? FacingDirection.Down : FacingDirection.Up;
+    }
+
+    private void UpdateSpriteAnimation()
+    {
+        if (spriteRenderer == null)
         {
             return;
         }
 
-        float x = direction.x;
-        float y = direction.y;
-
-        // 대각선 우선
-        if (Mathf.Abs(x) > 0.1f && Mathf.Abs(y) > 0.1f)
+        if (moveInput == Vector2.zero)
         {
-            if (y < 0)
-                sr.sprite = animToggle ? diagDownA : diagDownB;
-            else
-                sr.sprite = animToggle ? diagUpA : diagUpB;
-
-            sr.flipX = x > 0;
+            ResetWalkAnimation();
+            ApplyIdleSprite();
+            return;
         }
-        // 좌우
-        else if (Mathf.Abs(x) > Mathf.Abs(y))
+
+        animationTimer += Time.deltaTime;
+        if (animationTimer >= animationInterval)
         {
-            sr.sprite = animToggle ? leftA : leftB;
-            sr.flipX = x > 0;
+            animationTimer = 0f;
+            walkFrameIndex = (walkFrameIndex + 1) % WalkFrameSequence.Length;
         }
-        // 상하
-        else
+
+        ApplySprite(GetCurrentSpriteArray(), WalkFrameSequence[walkFrameIndex]);
+    }
+
+    private void ResetWalkAnimation()
+    {
+        animationTimer = 0f;
+        walkFrameIndex = 0;
+    }
+
+    private void ApplyIdleSprite()
+    {
+        ApplySprite(GetCurrentSpriteArray(), 0);
+    }
+
+    private Sprite[] GetCurrentSpriteArray()
+    {
+        switch (facingDirection)
         {
-            if (y < 0)
-            {
-                sr.sprite = animToggle ? downA : downB;
-                sr.flipX = false;
-            }
-            else
-            {
-                sr.sprite = up;
-                sr.flipX = animToggle;
-            }
+            case FacingDirection.Left:
+                return leftSprites;
+            case FacingDirection.Right:
+                return rightSprites;
+            case FacingDirection.Up:
+                return upSprites;
+            default:
+                return downSprites;
         }
     }
 
-    private void EnsureSpriteRenderer()
+    private void ApplySprite(Sprite[] sprites, int preferredIndex)
     {
-        if (sr == null)
+        if (spriteRenderer == null || sprites == null || sprites.Length == 0)
         {
-            sr = GetComponent<SpriteRenderer>();
+            return;
+        }
+
+        int index = Mathf.Clamp(preferredIndex, 0, sprites.Length - 1);
+        Sprite sprite = sprites[index];
+
+        if (sprite == null)
+        {
+            sprite = FindFallbackSprite(sprites);
+        }
+
+        if (sprite != null)
+        {
+            spriteRenderer.sprite = sprite;
         }
     }
 
-    // 🔹 Enemy가 추적할 때 사용할 정보
-    public Vector2 GetDirection()
+    private Sprite FindFallbackSprite(Sprite[] sprites)
     {
-        return inputDir;
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            if (sprites[i] != null)
+            {
+                return sprites[i];
+            }
+        }
+
+        return null;
+    }
+
+    private void UpdateGameManagerFacing()
+    {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
+        switch (facingDirection)
+        {
+            case FacingDirection.Left:
+                GameManager.Instance.playerFacingDirection = Vector2.left;
+                break;
+            case FacingDirection.Right:
+                GameManager.Instance.playerFacingDirection = Vector2.right;
+                break;
+            case FacingDirection.Up:
+                GameManager.Instance.playerFacingDirection = Vector2.up;
+                break;
+            default:
+                GameManager.Instance.playerFacingDirection = Vector2.down;
+                break;
+        }
     }
 }

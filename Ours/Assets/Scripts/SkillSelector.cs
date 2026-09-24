@@ -28,7 +28,7 @@ public class SkillSelector : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.X))
+        if (GameInput.CancelPressed)
         {
             if (battleManager != null)
             {
@@ -38,19 +38,19 @@ public class SkillSelector : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (GameInput.DownPressed || GameInput.RightPressed)
         {
             MoveSelection(1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        if (GameInput.UpPressed || GameInput.LeftPressed)
         {
             MoveSelection(-1);
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
             SelectCurrentSkill();
         }

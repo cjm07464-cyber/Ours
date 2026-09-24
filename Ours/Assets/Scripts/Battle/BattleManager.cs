@@ -176,7 +176,7 @@ public class BattleManager : MonoBehaviour
 
     private void HandleStartMessageInput()
     {
-        if (!Input.GetKeyDown(KeyCode.Z))
+        if (!GameInput.ConfirmPressed)
         {
             return;
         }
@@ -213,7 +213,7 @@ public class BattleManager : MonoBehaviour
 
     private void HandleCommandInput()
     {
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (GameInput.UpPressed)
         {
             selectedCommandIndex--;
             if (selectedCommandIndex < 0)
@@ -225,7 +225,7 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (GameInput.DownPressed)
         {
             selectedCommandIndex++;
             if (selectedCommandIndex >= commands.Length)
@@ -237,13 +237,13 @@ public class BattleManager : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
             ExecuteSelectedCommand();
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.X))
+        if (GameInput.CancelPressed)
         {
             selectedCommandIndex = 0;
             UpdateCommandText();
@@ -305,7 +305,7 @@ public class BattleManager : MonoBehaviour
         SetMessagePanel(true);
 
         int damage = CalculatePhysicalDamage(
-            GameManager.Instance.attack,
+            GameManager.Instance.GetEffectiveAttack(),
             GameManager.Instance.luck,
             enemyData.defense,
             out bool isCritical);
@@ -375,7 +375,7 @@ public class BattleManager : MonoBehaviour
         int damage = CalculatePhysicalDamage(
             enemyData.attackPower,
             enemyData.luck,
-            GameManager.Instance.defense,
+            GameManager.Instance.GetEffectiveDefense(),
             out bool isCritical);
 
         GameManager.Instance.currentHP -= damage;
@@ -464,7 +464,7 @@ public class BattleManager : MonoBehaviour
 
         messageText.text = "모두 쓰러졌다...";
 
-        // Z를 눌러야 다음으로 진행
+        // C를 눌러야 다음으로 진행
         yield return WaitForConfirm();
 
         // 중요:
@@ -487,8 +487,8 @@ public class BattleManager : MonoBehaviour
         // 검은 화면에서 게임오버 패널로 페이드 인
         yield return FadeInRoutine();
 
-        // 방금 누른 Z가 바로 선택 입력으로 들어가지 않게 방지
-        yield return WaitUntilZReleased();
+        // 방금 누른 C가 바로 선택 입력으로 들어가지 않게 방지
+        yield return WaitUntilConfirmReleased();
 
         inputLocked = false;
     }
@@ -645,26 +645,7 @@ public class BattleManager : MonoBehaviour
 
     private int GetRequiredExp(int level)
     {
-        int[] requiredExpTable =
-        {
-            0,   // index 0 unused
-            10,  // Lv1 -> Lv2
-            25,  // Lv2 -> Lv3
-            45,  // Lv3 -> Lv4
-            70,  // Lv4 -> Lv5
-            100, // Lv5 -> Lv6
-            135, // Lv6 -> Lv7
-            175, // Lv7 -> Lv8
-            220, // Lv8 -> Lv9
-            270  // Lv9 -> Lv10
-        };
-
-        if (level > 0 && level < requiredExpTable.Length)
-        {
-            return requiredExpTable[level];
-        }
-
-        return level * level * 5 + level * 10;
+        return GameManager.GetRequiredExpForLevel(level);
     }
 
     private void LevelUp()
@@ -759,23 +740,23 @@ public class BattleManager : MonoBehaviour
     }
     private IEnumerator WaitForConfirm()
     {
-        // 방금 누른 Z가 바로 다음 메시지를 넘기지 않도록,
-        // 먼저 Z 키에서 손을 뗄 때까지 기다림
-        while (Input.GetKey(KeyCode.Z))
+        // 방금 누른 C가 바로 다음 메시지를 넘기지 않도록,
+        // 먼저 C 키에서 손을 뗄 때까지 기다림
+        while (GameInput.ConfirmHeld)
         {
             yield return null;
         }
 
-        // 그 다음 새로 Z를 누를 때까지 기다림
-        while (!Input.GetKeyDown(KeyCode.Z))
+        // 그 다음 새로 C를 누를 때까지 기다림
+        while (!GameInput.ConfirmPressed)
         {
             yield return null;
         }
     }
 
-    private IEnumerator WaitUntilZReleased()
+    private IEnumerator WaitUntilConfirmReleased()
     {
-        while (Input.GetKey(KeyCode.Z))
+        while (GameInput.ConfirmHeld)
         {
             yield return null;
         }
@@ -1052,14 +1033,14 @@ public class BattleManager : MonoBehaviour
 
     private void HandleGameOverInput()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))
+        if (GameInput.LeftPressed || GameInput.RightPressed)
         {
             gameOverSelectedIndex = 1 - gameOverSelectedIndex;
             UpdateGameOverSelector();
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
             if (gameOverSelectedIndex == 0)
             {
@@ -1170,7 +1151,7 @@ public class BattleManager : MonoBehaviour
         }
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene(GameManager.BootSceneName);
+        SceneManager.LoadScene(GameManager.TitleSceneName);
     }
     private bool IsPartyDefeated()
     {

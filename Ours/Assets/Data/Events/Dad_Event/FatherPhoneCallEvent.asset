@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06d899ed50f75b459941103388e0bf6, type: 3}
+  m_Name: FatherPhoneCallEvent
+  m_EditorClassIdentifier: 
+  steps:
+  - stepType: 0
+    dialogueSequence: {fileID: 11400000, guid: 2d62bca77a14bf342ade35f0f0b2fee5, type: 2}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+  - stepType: 3
+    dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: father_phone_call_done

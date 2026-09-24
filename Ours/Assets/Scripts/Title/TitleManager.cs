@@ -26,6 +26,7 @@ public class TitleManager : MonoBehaviour
     public GameObject Reset_noButton;
 
     public AudioSource introAudioSource;
+    [SerializeField] private string prologueSceneName = "PrologueScene";
     private string enterName;
     private int introIndex = 0;
     public float typingSpeed = 0.05f;
@@ -72,9 +73,9 @@ public class TitleManager : MonoBehaviour
         if (!introPanel.activeSelf)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (GameInput.ConfirmPressed)
         {
-            HandleIntroZInput();
+            HandleIntroConfirmInput();
         }
     }
 
@@ -202,7 +203,7 @@ public class TitleManager : MonoBehaviour
         typingCoroutine = null;
     }
 
-    private void HandleIntroZInput()
+    private void HandleIntroConfirmInput()
     {
         if (isTyping)
         {
@@ -222,7 +223,7 @@ public class TitleManager : MonoBehaviour
                 }
 
                 GameManager.Instance.introPlayed = true;
-                UnityEngine.SceneManagement.SceneManager.LoadScene(GameManager.TownSceneName);
+                UnityEngine.SceneManagement.SceneManager.LoadScene(prologueSceneName);
                 return;
             }
 

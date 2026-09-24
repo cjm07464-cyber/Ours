@@ -11100,6 +11100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PersistentUI
       objectReference: {fileID: 0}
+    - target: {fileID: 3739454304133137976, guid: 2c532c353207c56479b29c391f65bbbe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4308464660587698443, guid: 2c532c353207c56479b29c391f65bbbe, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -11749,6 +11753,8 @@ MonoBehaviour:
   newYesButton: {fileID: 518893910}
   newNoButton: {fileID: 518893909}
   titleSceneName: TitleScene
+  startNewGameBeforeLoad: 0
+  markForestCompletedOnConfirm: 1
   fadeOverlay: {fileID: 582659500}
   forestBgmAudioSource: {fileID: 1443397978}
   exitFadeDuration: 1.5
@@ -27994,8 +28000,8 @@ Transform:
   m_GameObject: {fileID: 1953458400}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.197, y: 0.804, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
+  m_LocalPosition: {x: 0.333, y: 0.952, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 124330922}

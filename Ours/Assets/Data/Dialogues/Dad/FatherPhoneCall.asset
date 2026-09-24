@@ -37,7 +37,7 @@ MonoBehaviour:
     instantText: 0
   - speaker: {fileID: 11400000, guid: fb5dda8eeb7bd154893356e9360e71d4, type: 2}
     expressionId: normal
-    text: "..\uADF8\uB798! A\uD0A4\uB97C \uB204\uB974\uBA74 \uC774\uAC83\uC800\uAC83
+    text: "..\uADF8\uB798! Z\uD0A4\uB97C \uB204\uB974\uBA74 \uC774\uAC83\uC800\uAC83
       \uB3C4\uC6C0\uC774 \uB420 \uB9CC\uD55C \uAC83\uB4E4\uC774 \uC788\uC744 \uAC70\uB2E4."
     showPortrait: 1
     showSpeakerName: 1

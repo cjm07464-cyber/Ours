@@ -5,6 +5,7 @@ using System.IO;
 public class SaveSystem
 {
     private static string savePath = Application.persistentDataPath + "/savefile.json";
+    private static int lastDevDeleteFrame = -1;
 
     public static bool HasSaveData()
     {
@@ -116,16 +117,41 @@ public class SaveSystem
 
         GameManager.Instance.LoadFromSaveData(data);
     }
-    public static void DeleteSaveData()
+    public static void DeleteSaveData(bool devLog = false)
     {
-        if (HasSaveData())
+        if (devLog)
+        {
+            int currentFrame = Time.frameCount;
+            if (lastDevDeleteFrame == currentFrame)
+            {
+                return;
+            }
+
+            lastDevDeleteFrame = currentFrame;
+        }
+
+        bool hadSaveData = HasSaveData();
+        if (hadSaveData)
         {
             File.Delete(savePath);
-            Debug.Log("세이브 파일 삭제 완료");
+        }
+
+        if (devLog)
+        {
+            if (HasValidSaveData())
+            {
+                Debug.LogWarning("[DEV] Save data still appears valid after deletion.");
+            }
+
+            Debug.Log("[DEV] All save data deleted.");
+        }
+        else if (hadSaveData && HasSaveData())
+        {
+            Debug.LogWarning("세이브 파일 삭제에 실패했습니다.");
         }
         else
         {
-            Debug.LogWarning("삭제할 세이브 파일이 없습니다.");
+            Debug.Log("세이브 파일 삭제 완료");
         }
     }
 }

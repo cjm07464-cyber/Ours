@@ -13,13 +13,25 @@ MonoBehaviour:
   m_Name: Mom_ExitBlockedEvent
   m_EditorClassIdentifier: 
   steps:
-  - stepType: 3
+  - stepType: 4
     dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 1
     itemId: 
     count: 0
     flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
   - stepType: 0
     dialogueSequence: {fileID: 11400000, guid: 4197db61949cde649b7399239ce4b4c5, type: 2}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 1
     itemId: 
     count: 0
     flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}

@@ -105,8 +105,7 @@ public class GameManager : MonoBehaviour
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (GameInput.DebugZeroPressed)
         {
-            SaveSystem.DeleteSaveData();
-            Debug.Log("[DEV] 저장 파일 삭제 요청");
+            SaveSystem.DeleteSaveData(true);
         }
 #endif
     }

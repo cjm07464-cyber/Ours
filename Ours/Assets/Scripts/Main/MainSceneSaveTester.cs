@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class MainSceneSaveTester : MonoBehaviour
 {
@@ -9,27 +8,16 @@ public class MainSceneSaveTester : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (GameInput.DebugZeroPressed)
         {
-            SaveNow();
+            DeleteAllSaveData();
         }
+#endif
     }
 
-    private void SaveNow()
+    private void DeleteAllSaveData()
     {
-        if (GameManager.Instance == null)
-        {
-            Debug.LogWarning("GameManager가 없습니다.");
-            return;
-        }
-
-        GameManager.Instance.currentSceneName = SceneManager.GetActiveScene().name;
-
-        if (playerTransform != null)
-        {
-            GameManager.Instance.playerPosition = playerTransform.position;
-        }
-
-        SaveSystem.SaveGame();
+        SaveSystem.DeleteSaveData(true);
     }
 }

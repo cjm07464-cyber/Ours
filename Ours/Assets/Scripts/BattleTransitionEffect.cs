@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class BattleTransitionEffect : MonoBehaviour
 {
+    public static bool IsTransitioning { get; private set; }
+
     public Sprite[] frames;          // Normal Battle 프레임들
     public float frameInterval = 0.05f;
     public string battleSceneName = "BattleScene";
@@ -14,6 +16,26 @@ public class BattleTransitionEffect : MonoBehaviour
     float timer;
     bool isPlaying = false;
     bool animationFinished = false;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void RegisterSceneLoaded()
+    {
+        IsTransitioning = false;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        IsTransitioning = false;
+    }
+
+    public static void BeginTransition()
+    {
+        IsTransitioning = true;
+        MainMenuManager.CloseForBattleTransition();
+    }
+
     void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
@@ -76,6 +98,8 @@ public class BattleTransitionEffect : MonoBehaviour
     public void Play()
     {
         if (isPlaying) return;
+
+        BeginTransition();
 
         if (frames == null || frames.Length == 0)
         {

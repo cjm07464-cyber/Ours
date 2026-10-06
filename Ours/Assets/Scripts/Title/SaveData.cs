@@ -28,6 +28,7 @@ public class SaveData
     public int speed;
     public int luck;
     public int gold;        // 소지 골드
+    public int pendingGold; // 아빠 전화 시 계좌로 지급할 전투 보상 골드
 
     public string currentSceneName;     // 진행복구용 현재씬이름
 

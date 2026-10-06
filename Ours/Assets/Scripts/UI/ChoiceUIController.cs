@@ -12,6 +12,9 @@ public class ChoiceUIController : MonoBehaviour
     [SerializeField] private RectTransform noText;
     [SerializeField] private Vector2 cursorOffset = new Vector2(-40f, 0f);
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip cursorMoveSound;
+
     private Action<bool> onChoiceSelected;
     private int selectedIndex;
     private int openedFrame = -1;
@@ -96,8 +99,18 @@ public class ChoiceUIController : MonoBehaviour
 
     private void ToggleSelection()
     {
+        int previousIndex = selectedIndex;
         selectedIndex = selectedIndex == YesIndex ? NoIndex : YesIndex;
         UpdateCursor();
+        PlayCursorMoveSoundIfChanged(previousIndex);
+    }
+
+    private void PlayCursorMoveSoundIfChanged(int previousIndex)
+    {
+        if (selectedIndex != previousIndex && SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayOneShot(cursorMoveSound);
+        }
     }
 
     private void UpdateCursor()

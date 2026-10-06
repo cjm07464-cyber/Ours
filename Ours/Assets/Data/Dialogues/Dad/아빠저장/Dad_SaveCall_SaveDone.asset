@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f109b9e25dfa6cc49af9f5ccf437358c, type: 3}
+  m_Name: Dad_SaveCall_SaveDone
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: fb5dda8eeb7bd154893356e9360e71d4, type: 2}
+    expressionId: 
+    text: "....\uB410\uB2E4. \uC800\uC7A5\uD588\uB2E8\uB2E4!"
+    showPortrait: 1
+    showSpeakerName: 1
+    lineStartSound: {fileID: 0}
+    stopLineStartSoundOnAdvance: 0
+    instantText: 0
+    lineEndSound: {fileID: 8300000, guid: efbf5dc67443552439d9c6cfc3fd751b, type: 3}
+    lineEndSoundVolume: 0.5
+    waitForLineEndSound: 1
+    pauseBgmDuringLineEndSound: 1
+    bgmResumeFadeDuration: 1
+  - speaker: {fileID: 11400000, guid: fb5dda8eeb7bd154893356e9360e71d4, type: 2}
+    expressionId: 
+    text: "\uC624\uB298\uC740 \uC5EC\uAE30\uAE4C\uC9C0 \uD560 \uAC70\uB2C8?"
+    showPortrait: 1
+    showSpeakerName: 1
+    lineStartSound: {fileID: 0}
+    stopLineStartSoundOnAdvance: 0
+    instantText: 0
+    lineEndSound: {fileID: 0}
+    lineEndSoundVolume: 1
+    waitForLineEndSound: 0
+    pauseBgmDuringLineEndSound: 0
+    bgmResumeFadeDuration: 1

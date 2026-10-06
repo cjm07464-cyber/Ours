@@ -32,6 +32,9 @@ public class MainMenuManager : MonoBehaviour
     [Header("Unlock")]
     [SerializeField] private string menuUnlockFlagId = GameManager.FieldMenuUnlockFlagId;
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip cursorMoveSound;
+
     private readonly RectTransform[] menuTexts = new RectTransform[MenuItemCount];
     private int selectedIndex;
     private bool isMenuOpen;
@@ -96,6 +99,16 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
+        if (BattleTransitionEffect.IsTransitioning)
+        {
+            if (isMenuOpen)
+            {
+                CloseMenu(false);
+            }
+
+            return;
+        }
+
         if (!isMenuOpen)
         {
             if (GameInput.MenuPressed && CanOpenMenu())
@@ -141,7 +154,9 @@ public class MainMenuManager : MonoBehaviour
 
     private bool CanOpenMenu()
     {
-        if (!IsFieldMenuUnlocked() || IsDialogueOpen())
+        if (BattleTransitionEffect.IsTransitioning ||
+            !IsFieldMenuUnlocked() ||
+            IsDialogueOpen())
         {
             return false;
         }
@@ -219,6 +234,14 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public static void CloseForBattleTransition()
+    {
+        if (instance != null)
+        {
+            instance.CloseMenu(false);
+        }
+    }
+
     private void SetPlayerCanMove(bool canMove)
     {
         if (playerController == null)
@@ -247,8 +270,18 @@ public class MainMenuManager : MonoBehaviour
 
     private void ChangeSelection(int delta)
     {
+        int previousIndex = selectedIndex;
         selectedIndex = (selectedIndex + delta + MenuItemCount) % MenuItemCount;
         UpdateSelectionVisual();
+        PlayCursorMoveSoundIfChanged(previousIndex);
+    }
+
+    private void PlayCursorMoveSoundIfChanged(int previousIndex)
+    {
+        if (selectedIndex != previousIndex && SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayOneShot(cursorMoveSound);
+        }
     }
 
     private void UpdateSelectionVisual()

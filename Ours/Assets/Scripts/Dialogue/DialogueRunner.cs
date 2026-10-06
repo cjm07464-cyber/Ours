@@ -8,11 +8,15 @@ public class DialogueRunner : MonoBehaviour
 
     private DialogueSequence currentSequence;
     private Action onComplete;
+    private Action<int> onLineStarted;
     private int lineIndex;
 
     public bool IsRunning { get; private set; }
 
-    public void Run(DialogueSequence sequence, Action onComplete = null)
+    public void Run(
+        DialogueSequence sequence,
+        Action onComplete = null,
+        Action<int> onLineStarted = null)
     {
         if (IsRunning)
         {
@@ -20,6 +24,7 @@ public class DialogueRunner : MonoBehaviour
         }
 
         this.onComplete = onComplete;
+        this.onLineStarted = onLineStarted;
         currentSequence = sequence;
         lineIndex = 0;
         IsRunning = true;
@@ -38,6 +43,7 @@ public class DialogueRunner : MonoBehaviour
             return;
         }
 
+        int currentLineIndex = lineIndex;
         DialogueLine line = currentSequence.lines[lineIndex];
         lineIndex++;
 
@@ -47,8 +53,12 @@ public class DialogueRunner : MonoBehaviour
             return;
         }
 
+        dialogueController.SetContinueToNextLine(HasRemainingLine());
+        onLineStarted?.Invoke(currentLineIndex);
+
         string text = ResolveText(line.text);
         PlayLineStartSound(line.lineStartSound);
+        ConfigureLineEndSound(line);
 
         if (line.showPortrait && line.speaker != null)
         {
@@ -60,23 +70,23 @@ public class DialogueRunner : MonoBehaviour
                 line.speaker.portraitGradientColor,
                 line.showSpeakerName,
                 line.speaker.dialogueTypeSound,
-                PlayCurrentLine);
+                () => CompleteLine(line));
             return;
         }
 
         if (line.speaker != null)
         {
-            dialogueController.ShowPortraitBoxOnly(text, line.speaker.dialogueTypeSound, PlayCurrentLine);
+            dialogueController.ShowPortraitBoxOnly(text, line.speaker.dialogueTypeSound, () => CompleteLine(line));
             return;
         }
 
         if (line.instantText)
         {
-            dialogueController.ShowInstant(text, PlayCurrentLine);
+            dialogueController.ShowInstant(text, () => CompleteLine(line));
             return;
         }
 
-        dialogueController.Show(text, PlayCurrentLine);
+        dialogueController.Show(text, () => CompleteLine(line));
     }
 
     private void PlayLineStartSound(AudioClip clip)
@@ -87,6 +97,31 @@ public class DialogueRunner : MonoBehaviour
         }
     }
 
+    private void ConfigureLineEndSound(DialogueLine line)
+    {
+        if (dialogueController == null || line == null)
+        {
+            return;
+        }
+
+        dialogueController.ConfigureLineEndSound(
+            line.lineEndSound,
+            line.lineEndSoundVolume,
+            line.waitForLineEndSound,
+            line.pauseBgmDuringLineEndSound,
+            line.bgmResumeFadeDuration);
+    }
+
+    private void CompleteLine(DialogueLine line)
+    {
+        if (line != null && line.stopLineStartSoundOnAdvance && SFXManager.Instance != null)
+        {
+            SFXManager.Instance.Stop();
+        }
+
+        PlayCurrentLine();
+    }
+
     private void Complete()
     {
         IsRunning = false;
@@ -94,7 +129,26 @@ public class DialogueRunner : MonoBehaviour
 
         Action callback = onComplete;
         onComplete = null;
+        onLineStarted = null;
         callback?.Invoke();
+    }
+
+    private bool HasRemainingLine()
+    {
+        if (currentSequence == null || currentSequence.lines == null)
+        {
+            return false;
+        }
+
+        for (int i = lineIndex; i < currentSequence.lines.Count; i++)
+        {
+            if (currentSequence.lines[i] != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private string ResolveText(string text)

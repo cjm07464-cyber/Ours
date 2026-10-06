@@ -113,6 +113,21 @@ public class PlayerController : MonoBehaviour
         return moveInput;
     }
 
+    public Vector2 GetFacingDirection()
+    {
+        switch (facingDirection)
+        {
+            case FacingDirection.Left:
+                return Vector2.left;
+            case FacingDirection.Right:
+                return Vector2.right;
+            case FacingDirection.Up:
+                return Vector2.up;
+            default:
+                return Vector2.down;
+        }
+    }
+
     public void AutoMoveTo(Vector2 targetPosition, float speed, Action onComplete = null)
     {
         if (rb == null)
@@ -290,20 +305,6 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        switch (facingDirection)
-        {
-            case FacingDirection.Left:
-                GameManager.Instance.playerFacingDirection = Vector2.left;
-                break;
-            case FacingDirection.Right:
-                GameManager.Instance.playerFacingDirection = Vector2.right;
-                break;
-            case FacingDirection.Up:
-                GameManager.Instance.playerFacingDirection = Vector2.up;
-                break;
-            default:
-                GameManager.Instance.playerFacingDirection = Vector2.down;
-                break;
-        }
+        GameManager.Instance.playerFacingDirection = GetFacingDirection();
     }
 }

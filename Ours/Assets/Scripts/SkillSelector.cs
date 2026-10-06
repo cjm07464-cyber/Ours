@@ -4,33 +4,75 @@ using UnityEngine;
 
 public class SkillSelector : MonoBehaviour
 {
-    [SerializeField] private RectTransform selector;
-    [SerializeField] private RectTransform[] options;
-    [SerializeField] private TextMeshProUGUI[] optionTexts;
-    [SerializeField] private BattleManager battleManager;
-
-    private readonly List<SkillData> currentSkills = new List<SkillData>();
-    private int currentIndex;
-
-    private void Awake()
+    private enum SelectionStage
     {
-        if (selector == null)
+        Category,
+        Skill
+    }
+
+    private sealed class SkillRow
+    {
+        public readonly string displayName;
+        public readonly List<SkillData> tiers = new List<SkillData>();
+
+        public SkillRow(string displayName)
         {
-            selector = GetComponent<RectTransform>();
+            this.displayName = displayName;
         }
     }
 
+    private static readonly SkillCategory[] Categories =
+    {
+        SkillCategory.Attack,
+        SkillCategory.Heal,
+        SkillCategory.Assist
+    };
+
+    [Header("Category Panel (Attack / Heal / Assist)")]
+    [SerializeField] private RectTransform[] categoryOptions;
+
+    [Header("Skill List Panel")]
+    [SerializeField] private RectTransform[] options;
+    [SerializeField] private TextMeshProUGUI[] optionTexts;
+
+    [Header("Description Panel")]
+    [SerializeField] private TextMeshProUGUI descriptionText;
+    [SerializeField] private TextMeshProUGUI mpCostText;
+
+    [Header("Focus Colors")]
+    [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color selectedColor = new Color(1f, 0.5411765f, 0f, 1f);
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip cursorMoveSound;
+    [SerializeField, Min(0f)] private float cursorMoveVolumeScale = 1.3f;
+    [SerializeField] private AudioClip commandConfirmSound;
+    [SerializeField, Min(0f)] private float commandConfirmVolumeScale = 1.5f;
+
+    [Header("Context")]
+    [SerializeField] private BattleManager battleManager;
+
+    private readonly List<SkillData> currentSkills = new List<SkillData>();
+    private readonly List<SkillRow> visibleRows = new List<SkillRow>();
+    private SelectionStage currentStage;
+    private int currentCategoryIndex;
+    private int currentRowIndex;
+    private int currentTierIndex;
+
     private void OnEnable()
     {
-        currentIndex = 0;
-        MoveSelectorTo(currentIndex);
+        EnterCategoryStage(true);
     }
 
     private void Update()
     {
         if (GameInput.CancelPressed)
         {
-            if (battleManager != null)
+            if (currentStage == SelectionStage.Skill)
+            {
+                EnterCategoryStage(false);
+            }
+            else if (battleManager != null)
             {
                 battleManager.CloseSkillPanelAndReturnToCommand();
             }
@@ -38,15 +80,59 @@ public class SkillSelector : MonoBehaviour
             return;
         }
 
-        if (GameInput.DownPressed || GameInput.RightPressed)
+        if (currentStage == SelectionStage.Category)
         {
-            MoveSelection(1);
+            HandleCategoryInput();
             return;
         }
 
-        if (GameInput.UpPressed || GameInput.LeftPressed)
+        HandleSkillInput();
+    }
+
+    private void HandleCategoryInput()
+    {
+        if (GameInput.DownPressed)
         {
-            MoveSelection(-1);
+            MoveCategorySelection(1);
+            return;
+        }
+
+        if (GameInput.UpPressed)
+        {
+            MoveCategorySelection(-1);
+            return;
+        }
+
+        if (GameInput.ConfirmPressed && GetSelectableRowCount() > 0)
+        {
+            PlaySfx(commandConfirmSound, commandConfirmVolumeScale);
+            EnterSkillStage();
+        }
+    }
+
+    private void HandleSkillInput()
+    {
+        if (GameInput.DownPressed)
+        {
+            MoveRowSelection(1);
+            return;
+        }
+
+        if (GameInput.UpPressed)
+        {
+            MoveRowSelection(-1);
+            return;
+        }
+
+        if (GameInput.RightPressed)
+        {
+            MoveTierSelection(1);
+            return;
+        }
+
+        if (GameInput.LeftPressed)
+        {
+            MoveTierSelection(-1);
             return;
         }
 
@@ -71,9 +157,7 @@ public class SkillSelector : MonoBehaviour
             }
         }
 
-        currentIndex = 0;
-        RefreshOptions();
-        MoveSelectorTo(currentIndex);
+        EnterCategoryStage(true);
     }
 
     private void RefreshOptions()
@@ -89,9 +173,11 @@ public class SkillSelector : MonoBehaviour
                 continue;
             }
 
-            if (i < currentSkills.Count)
+            optionTexts[i].color = normalColor;
+
+            if (i < visibleRows.Count)
             {
-                optionTexts[i].text = currentSkills[i].skillName;
+                optionTexts[i].text = BuildRowText(visibleRows[i], i == currentRowIndex);
             }
             else
             {
@@ -99,10 +185,6 @@ public class SkillSelector : MonoBehaviour
             }
         }
 
-        if (currentSkills.Count == 0 && textCount > 0 && optionTexts[0] != null)
-        {
-            optionTexts[0].text = "사용 가능한 스킬이 없다.";
-        }
     }
 
     private void AutoResolveOptionTexts()
@@ -122,67 +204,311 @@ public class SkillSelector : MonoBehaviour
         }
     }
 
-    private void MoveSelection(int direction)
+    private void EnterCategoryStage(bool resetCategory)
     {
-        if (currentSkills.Count == 0)
+        currentStage = SelectionStage.Category;
+
+        if (resetCategory)
         {
-            return;
+            currentCategoryIndex = 0;
         }
 
-        int optionCount = GetSelectableOptionCount();
-        if (optionCount == 0)
-        {
-            return;
-        }
-
-        currentIndex += direction;
-
-        if (currentIndex < 0)
-        {
-            currentIndex = optionCount - 1;
-        }
-        else if (currentIndex >= optionCount)
-        {
-            currentIndex = 0;
-        }
-
-        MoveSelectorTo(currentIndex);
+        currentCategoryIndex = Mathf.Clamp(currentCategoryIndex, 0, Categories.Length - 1);
+        currentRowIndex = 0;
+        currentTierIndex = 0;
+        RebuildVisibleRows();
+        RefreshOptions();
+        ClearDescription();
+        RefreshCategoryFocus();
     }
 
-    private int GetSelectableOptionCount()
+    private void EnterSkillStage()
     {
-        int optionLength = options == null ? 0 : options.Length;
-        return Mathf.Min(currentSkills.Count, optionLength);
+        if (GetSelectableRowCount() == 0)
+        {
+            return;
+        }
+
+        currentStage = SelectionStage.Skill;
+        currentRowIndex = 0;
+        currentTierIndex = 0;
+        RefreshOptions();
+        RefreshCategoryFocus();
+        RefreshDescription();
+    }
+
+    private void MoveCategorySelection(int direction)
+    {
+        int previousIndex = currentCategoryIndex;
+        currentCategoryIndex += direction;
+
+        if (currentCategoryIndex < 0)
+        {
+            currentCategoryIndex = Categories.Length - 1;
+        }
+        else if (currentCategoryIndex >= Categories.Length)
+        {
+            currentCategoryIndex = 0;
+        }
+
+        currentRowIndex = 0;
+        currentTierIndex = 0;
+        RebuildVisibleRows();
+        RefreshOptions();
+        ClearDescription();
+        RefreshCategoryFocus();
+
+        if (currentCategoryIndex != previousIndex)
+        {
+            PlaySfx(cursorMoveSound, cursorMoveVolumeScale);
+        }
+    }
+
+    private void MoveRowSelection(int direction)
+    {
+        int rowCount = GetSelectableRowCount();
+        if (rowCount == 0)
+        {
+            return;
+        }
+
+        int previousIndex = currentRowIndex;
+        int nextIndex = (currentRowIndex + direction + rowCount) % rowCount;
+        if (nextIndex == previousIndex)
+        {
+            return;
+        }
+
+        currentRowIndex = nextIndex;
+        currentTierIndex = 0;
+        RefreshOptions();
+        RefreshDescription();
+        PlaySfx(cursorMoveSound, cursorMoveVolumeScale);
+    }
+
+    private void MoveTierSelection(int direction)
+    {
+        SkillRow row = GetCurrentRow();
+        if (row == null || row.tiers.Count <= 1)
+        {
+            return;
+        }
+
+        int previousIndex = currentTierIndex;
+        currentTierIndex = (currentTierIndex + direction + row.tiers.Count) % row.tiers.Count;
+        RefreshOptions();
+        RefreshDescription();
+
+        if (currentTierIndex != previousIndex)
+        {
+            PlaySfx(cursorMoveSound, cursorMoveVolumeScale);
+        }
     }
 
     private void SelectCurrentSkill()
     {
-        if (battleManager == null || currentSkills.Count == 0)
+        if (battleManager == null)
         {
             return;
         }
 
-        if (currentIndex < 0 || currentIndex >= currentSkills.Count)
+        SkillData skill = GetCurrentSkill();
+        if (skill == null)
         {
             return;
         }
 
-        battleManager.OnSkillSelected(currentSkills[currentIndex]);
+        PlaySfx(commandConfirmSound, commandConfirmVolumeScale);
+        battleManager.OnSkillSelected(skill);
     }
 
-    private void MoveSelectorTo(int index)
+    private static void PlaySfx(AudioClip clip, float volumeScale)
     {
-        if (selector == null || options == null || options.Length == 0)
+        if (clip != null && SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayOneShot(clip, Mathf.Max(0f, volumeScale));
+        }
+    }
+
+    private void RebuildVisibleRows()
+    {
+        visibleRows.Clear();
+        SkillCategory selectedCategory = Categories[currentCategoryIndex];
+
+        for (int i = 0; i < currentSkills.Count; i++)
+        {
+            SkillData skill = currentSkills[i];
+            if (skill == null || ResolveCategory(skill) != selectedCategory)
+            {
+                continue;
+            }
+
+            string displayName = string.IsNullOrWhiteSpace(skill.skillName)
+                ? skill.name
+                : skill.skillName;
+            SkillRow row = FindRow(displayName);
+            if (row == null)
+            {
+                row = new SkillRow(displayName);
+                visibleRows.Add(row);
+            }
+
+            row.tiers.Add(skill);
+        }
+
+        for (int i = 0; i < visibleRows.Count; i++)
+        {
+            visibleRows[i].tiers.Sort(
+                (left, right) => left.skillTier.CompareTo(right.skillTier));
+        }
+    }
+
+    private SkillRow FindRow(string displayName)
+    {
+        for (int i = 0; i < visibleRows.Count; i++)
+        {
+            if (visibleRows[i].displayName == displayName)
+            {
+                return visibleRows[i];
+            }
+        }
+
+        return null;
+    }
+
+    private static SkillCategory ResolveCategory(SkillData skill)
+    {
+        if (skill.skillCategory != SkillCategory.Unspecified)
+        {
+            return skill.skillCategory;
+        }
+
+        return skill.skillType == SkillType.Heal
+            ? SkillCategory.Heal
+            : SkillCategory.Attack;
+    }
+
+    private string BuildRowText(SkillRow row, bool isCurrentRow)
+    {
+        string text = row.displayName;
+        for (int i = 0; i < row.tiers.Count; i++)
+        {
+            string tierLabel = GetTierLabel(row.tiers[i].skillTier);
+            if (currentStage == SelectionStage.Skill && isCurrentRow && i == currentTierIndex)
+            {
+                tierLabel = $"<color=#{ColorUtility.ToHtmlStringRGBA(selectedColor)}>{tierLabel}</color>";
+            }
+
+            text += $"   {tierLabel}";
+        }
+
+        return text;
+    }
+
+    private static string GetTierLabel(SkillTier tier)
+    {
+        switch (tier)
+        {
+            case SkillTier.Beta:
+                return "β";
+            case SkillTier.Gamma:
+                return "γ";
+            case SkillTier.Omega:
+                return "Ω";
+            default:
+                return "α";
+        }
+    }
+
+    private int GetSelectableRowCount()
+    {
+        int optionLength = options == null ? 0 : options.Length;
+        int textLength = optionTexts == null ? 0 : optionTexts.Length;
+        int slotCount = Mathf.Min(optionLength, textLength);
+        return Mathf.Min(visibleRows.Count, slotCount);
+    }
+
+    private SkillRow GetCurrentRow()
+    {
+        int rowCount = GetSelectableRowCount();
+        if (currentRowIndex < 0 || currentRowIndex >= rowCount)
+        {
+            return null;
+        }
+
+        return visibleRows[currentRowIndex];
+    }
+
+    private SkillData GetCurrentSkill()
+    {
+        SkillRow row = GetCurrentRow();
+        if (row == null || currentTierIndex < 0 || currentTierIndex >= row.tiers.Count)
+        {
+            return null;
+        }
+
+        return row.tiers[currentTierIndex];
+    }
+
+    private void RefreshDescription()
+    {
+        SkillData skill = GetCurrentSkill();
+        if (skill == null)
+        {
+            ClearDescription();
+            return;
+        }
+
+        if (descriptionText != null)
+        {
+            descriptionText.text = skill.description ?? string.Empty;
+        }
+
+        if (mpCostText != null)
+        {
+            mpCostText.text = $"소비MP : {skill.mpCost}";
+        }
+    }
+
+    private void ClearDescription()
+    {
+        if (descriptionText != null)
+        {
+            descriptionText.text = string.Empty;
+        }
+
+        if (mpCostText != null)
+        {
+            mpCostText.text = string.Empty;
+        }
+    }
+
+    private void RefreshCategoryFocus()
+    {
+        if (categoryOptions == null)
         {
             return;
         }
 
-        if (index < 0 || index >= options.Length || options[index] == null)
+        for (int i = 0; i < categoryOptions.Length; i++)
         {
-            return;
-        }
+            if (categoryOptions[i] == null)
+            {
+                continue;
+            }
 
-        Vector3 basePos = options[index].position;
-        selector.position = new Vector3(basePos.x - 90f, basePos.y, basePos.z);
+            TextMeshProUGUI categoryText = categoryOptions[i].GetComponent<TextMeshProUGUI>();
+            if (categoryText == null)
+            {
+                categoryText = categoryOptions[i].GetComponentInChildren<TextMeshProUGUI>(true);
+            }
+
+            if (categoryText != null)
+            {
+                categoryText.color = i == currentCategoryIndex
+                    ? selectedColor
+                    : normalColor;
+            }
+        }
     }
 }

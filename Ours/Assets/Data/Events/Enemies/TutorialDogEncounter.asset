@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06d899ed50f75b459941103388e0bf6, type: 3}
+  m_Name: TutorialDogEncounter
+  m_EditorClassIdentifier: 
+  steps:
+  - stepType: 4
+    dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
+    battleEnemyData: {fileID: 0}
+    battleEncounterId: 
+    battleSceneName: 
+    victoryStoryFlag: 
+    moveActorSpeed: 0
+    moveActorArrivalTolerance: 0
+  - stepType: 9
+    dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
+    battleEnemyData: {fileID: 0}
+    battleEncounterId: 
+    battleSceneName: 
+    victoryStoryFlag: 
+    moveActorSpeed: 2
+    moveActorArrivalTolerance: 0.1
+  - stepType: 0
+    dialogueSequence: {fileID: 11400000, guid: 9f629381c18c87e4289b8d18132766cb, type: 2}
+    messageText: "\uBA4D\uBA4D!"
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
+    battleEnemyData: {fileID: 0}
+    battleEncounterId: 
+    battleSceneName: 
+    victoryStoryFlag: 
+    moveActorSpeed: 0
+    moveActorArrivalTolerance: 0
+  - stepType: 8
+    dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
+    battleEnemyData: {fileID: 11400000, guid: de340d8ebbe3f424ab18d8d5647c3282, type: 2}
+    battleEncounterId: tutorial_dog
+    battleSceneName: BattleScene
+    victoryStoryFlag: tutorial_dog_battle_done
+    moveActorSpeed: 0
+    moveActorArrivalTolerance: 0

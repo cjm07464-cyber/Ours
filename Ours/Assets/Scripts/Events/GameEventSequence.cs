@@ -9,7 +9,10 @@ public enum GameEventStepType
     SetStoryFlag,
     Reaction,
     Choice,
-    SaveGame
+    SaveGame,
+    QuitGame,
+    StartBattle,
+    MoveActor
 }
 
 [System.Serializable]
@@ -37,6 +40,16 @@ public class GameEventStep
     [Header("Choice")]
     public GameEventSequence yesEventSequence;
     public GameEventSequence noEventSequence;
+
+    [Header("Battle")]
+    public EnemyData battleEnemyData;
+    public string battleEncounterId;
+    public string battleSceneName = "BattleScene";
+    public string victoryStoryFlag;
+
+    [Header("Move Actor")]
+    public float moveActorSpeed = 2f;
+    public float moveActorArrivalTolerance = 0.05f;
 }
 
 [CreateAssetMenu(fileName = "New Game Event Sequence", menuName = "Events/Game Event Sequence")]

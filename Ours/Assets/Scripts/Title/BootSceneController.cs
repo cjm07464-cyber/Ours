@@ -611,7 +611,7 @@ public class BootSceneController : MonoBehaviour
             menuGroup.SetActive(true);
         }
 
-        selectedIndex = NewGameIndex;
+        selectedIndex = continueEnabled ? ContinueIndex : NewGameIndex;
         if (!IsSelectable(selectedIndex))
         {
             MoveSelection(1);

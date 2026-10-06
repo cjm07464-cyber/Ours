@@ -6,6 +6,22 @@ public enum SkillType
     Heal
 }
 
+public enum SkillCategory
+{
+    Unspecified,
+    Attack,
+    Heal,
+    Assist
+}
+
+public enum SkillTier
+{
+    Alpha,
+    Beta,
+    Gamma,
+    Omega
+}
+
 public enum TargetType
 {
     Self,
@@ -27,6 +43,10 @@ public class SkillData : ScriptableObject
     [TextArea]
     public string description;
     public int learnLevel;
+
+    [Header("Skill Menu")]
+    public SkillCategory skillCategory = SkillCategory.Unspecified;
+    public SkillTier skillTier = SkillTier.Alpha;
 
     [Header("Cost / Type")]
     public int mpCost;

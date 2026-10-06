@@ -8,7 +8,7 @@
 앱 시작
   ↓
 TitleScene (기술적 엔트리)
-  ├─ 유효 저장 있음 ──────────────→ 기존 타이틀/메뉴
+  ├─ 유효 저장 있음 ──────────────→ 타이틀/메뉴
   │                                 └─ Continue → 저장된 씬
   │
   └─ 유효 저장 없음
@@ -23,14 +23,18 @@ TitleScene (기술적 엔트리)
                     ↓
                New Game
                     ↓
-               TownScene (현재)
+               TownScene
+                    ↓
+          집/엄마/첫 아빠 전화
+                    ↓
+          탐험 / 메뉴 / 저장
                     ↓ 적 접촉
                BattleScene
                     ↓
                TownScene
 ```
 
-Forest는 첫 실행 프롤로그다. 기술적인 첫 씬은 여전히 TitleScene이다.
+Forest는 첫 실행 프롤로그다. 기술적인 첫 씬은 여전히 `TitleScene`이다.
 
 ## 2. 핵심 런타임 상태
 
@@ -38,14 +42,15 @@ Forest는 첫 실행 프롤로그다. 기술적인 첫 씬은 여전히 TitleSce
 
 역할:
 
-- 플레이어 스탯/이름/골드/스킬 등 런타임 상태
+- 플레이어 이름/스탯/레벨/EXP/골드 등 런타임 상태
+- Inventory 및 장착 무기 상태
+- Story flag 관리
 - 저장 데이터 변환
 - 전투 진입용 임시 Enemy 정보
 - 씬 복귀 위치/방향
-- 전투 승리/도망 Enemy ID
 - 첫 실행용 startup session
 
-현재 중요한 값:
+현재 중요한 세션 값:
 
 ```text
 StartupSessionState
@@ -60,162 +65,359 @@ pendingPlayerName
 
 ### Runtime Bootstrap
 
-`GameManager`는 `RuntimeInitializeOnLoadMethod(BeforeSceneLoad)`로 자동 생성 가능하다.
+`GameManager`는 Runtime Bootstrap으로 씬 직접 Play에서도 생성될 수 있다.
 
 목적:
 
 - Forest/Town/Battle/Title 씬을 Editor에서 직접 Play해도 GameManager 누락 방지.
 
-씬에 기존 GameManager 오브젝트가 있으면 Awake singleton 로직으로 중복 인스턴스가 제거된다.
+씬에 기존 GameManager 오브젝트가 있으면 singleton 로직으로 중복 인스턴스를 정리한다.
 
-## 3. 씬별 책임
+## 3. Town PersistentUI
+
+Town의 공통 Dialogue/Menu/Choice 실행 구조는 `PersistentUI`를 기준으로 한다.
+
+```text
+PersistentUI
+├ DialogueController
+├ DialogueRunner
+├ MainMenuManager
+├ PhoneEventRunner
+└ Canvas
+   ├ DialogueUI
+   │  ├ BasicLayout
+   │  └ PortraitLayout
+   ├ MainMenuUI
+   │  ├ MenuPanel
+   │  └ CharacterStatusSlot
+   └ ChoiceUI
+      └ ChoicePanel
+         ├ Select
+         ├ YesText
+         └ NoText
+```
+
+활성 규칙:
+
+- `PersistentUI` = ON
+- `PhoneEventRunner` = ON
+- `ChoiceUI` 루트 = ON
+- `DialogueUI` / `MainMenuUI` / `ChoicePanel` = 필요할 때만 표시
+
+Coroutine 실행 컴포넌트는 비활성 GameObject에 두지 않는다.
+
+## 4. Dialogue 시스템
+
+### CharacterData
+
+캐릭터별 데이터:
+
+- characterId / displayName
+- 필드 방향 스프라이트
+- expressionId 기반 portrait
+- portrait 색상 정보
+- 캐릭터별 dialogue type sound
+
+### DialogueSequence
+
+대사 줄을 ScriptableObject 데이터로 보관한다.
+
+주요 Line 정보:
+
+- speaker
+- expressionId
+- text
+- showPortrait / showSpeakerName
+- instantText
+- lineStartSound
+- stopLineStartSoundOnAdvance
+- lineEndSound
+- lineEndSoundVolume
+- waitForLineEndSound
+- pauseBgmDuringLineEndSound
+- bgmResumeFadeDuration
+
+### DialogueController
+
+- BasicLayout / PortraitLayout 표시
+- typewriter 출력
+- TMP page 처리
+- 즉시 출력
+- 대화 닫기/정리
+
+### DialogueRunner
+
+- DialogueSequence 순차 실행
+- 토큰 치환
+
+현재 사용 토큰:
+
+```text
+{player}
+{level}
+{expToNextLevel}
+```
+
+`{player}`가 비어 있을 때의 fallback은 기존 구현을 유지한다.
+
+## 5. 범용 Game Event 시스템
+
+### GameEventSequence
+
+현재 Step 유형:
+
+```text
+Dialogue
+GiveItem
+SetStoryFlag
+Reaction
+SystemMessage
+Choice
+SaveGame
+QuitGame
+```
+
+### GameEventRunner
+
+Sequence의 Step을 순차 실행한다.
+
+Context에는 필요에 따라 다음을 연결한다.
+
+- DialogueRunner
+- DialogueController
+- ChoiceUIController
+- PlayerController
+- ReactionIcon
+- Reaction AudioSource / Sound
+- Quit FadeOverlay
+
+`GameEventRunner`는 각 이벤트 GameObject에 개별로 붙을 수 있다.
+
+예:
+
+```text
+HouseExitGate
+└ GameEventRunner
+
+FatherPhoneCallTrigger
+└ GameEventRunner
+
+PersistentUI/PhoneEventRunner
+└ GameEventRunner
+```
+
+같은 스크립트가 여러 GameObject에 존재하는 것은 정상이며, 각각 별도 Context를 가진다.
+
+## 6. Story flag / NPC 상호작용
+
+### NPCInteraction
+
+NPC 상호작용 시 기본 Sequence를 실행한다.
+
+Story flag에 따라 Alternate Sequence를 사용할 수 있다.
+
+엄마 예:
+
+```text
+Primary      = Mom_MorningEvent
+AlternateFlag = mother_morning_talk
+Alternate    = Mom_DefaultEvent
+```
+
+### StoryFlagGate
+
+필수 플래그가 없으면 통로를 막고 blocked event를 실행한다.
+
+엄마와 대화하지 않고 집을 나가려는 경우:
+
+```text
+Required Flag = mother_morning_talk
+Blocked Event = Mom_ExitBlockedEvent
+Return Point  = HouseExitReturnPoint
+```
+
+blocked event 후 Player의 `AutoMoveTo()`를 사용해 집 안쪽으로 되돌린다.
+
+### StoryEventTrigger
+
+위치 진입으로 GameEventSequence를 실행한다.
+
+첫 아빠 전화 Trigger는 완료 플래그 `father_phone_call_done`을 사용한다.
+
+## 7. Main Menu / Choice / 전화 저장
+
+Main Menu 입력:
+
+```text
+Z = 열기/닫기
+방향키 = 이동
+C = 결정
+X = 닫기
+```
+
+`father_phone_call_done` 이후 메뉴가 사용 가능하다.
+
+현재 메뉴 항목:
+
+- 상태
+- 장비
+- 가방
+- 통화
+- 닫기
+
+### ChoiceUI
+
+`ChoiceUIController`가 Yes/No 선택을 담당한다.
+
+```text
+ChoiceUI        = ON
+ChoicePanel     = 기본 OFF
+Select          = TMP ">"
+YesText         = 예
+NoText          = 아니오
+```
+
+Cursor/Select 이동 시 `SFXManager`를 통해 이동 SFX를 재생할 수 있다.
+
+### 전화 저장
+
+`MainMenuManager`의 통화 항목은 `PhoneEventRunner`를 통해 전화용 `GameEventSequence`를 실행한다.
+
+개념 흐름:
+
+```text
+Dad_SaveCall_Event
+├ Dialogue → Intro
+└ Choice
+   ├ YES → SaveGame
+   │        → 저장완료 Dialogue
+   │        → Choice
+   │           ├ YES → 마지막 Dialogue → QuitGame
+   │           └ NO  → 계속 플레이 Dialogue
+   └ NO  → 저장 없이 통화 종료 Dialogue
+```
+
+`QuitGame`은 화면/BGM Fade 후 Build에서 종료한다. Editor에서는 개발 로그만 남긴다.
+
+## 8. Town Room / Player
+
+Town은 한 씬 안에서 집 내부/외부 등 위치를 `TownRoomTransition`으로 전환한다.
+
+- trigger 진입
+- Fade
+- Player 위치 이동
+- Fade in
+
+Player는 이벤트 중 `SetCanMove(false)`로 입력/속도를 정리한다.
+
+StoryFlagGate 차단 복귀에는 `PlayerController.AutoMoveTo()`를 사용한다.
+
+## 9. 씬별 책임
 
 ### ForestScene
 
 첫 실행 프롤로그.
 
-- 4개 맵 영역을 한 씬에서 진행
-- 맵 간 Fade 전환
-- Forest 전용 Player/애니메이션/발소리
-- Map4 Y축 CameraFollow
-- UFO/Smoke/RedSign/조명/외계인 연출
+- 4개 맵 영역
+- 전용 이동/카메라/사운드
+- UFO/Alien 이벤트
 - 이름 입력
-- 이름 확정 후 Forest BGM + 화면 Fade Out → TitleScene
+- Forest → Title 전환
 
-상세: `STARTUP_FLOW.md`, `FIELD_SYSTEMS.md`
+상세: `STARTUP_FLOW.md`
 
 ### TitleScene
 
-- 시작 크레딧
-- 지구/Ours 타이틀 연출
+- 시작 크레딧/타이틀
 - New Game / Continue / Quit
-- Forest 라우팅 판정
-- 저장 유효성 판정에 따른 Continue 처리
-
-주의:
-
-- 씬 이름은 `TitleScene`.
-- 스크립트 클래스 `BootSceneController`는 현재 유지.
-- `TitleManager`에는 옛 이름 입력/시놉시스 로직이 남아 있음.
+- Forest 라우팅
+- 저장 유효성 판정
 
 ### TownScene
 
-- 일반 필드 탐험
-- 플레이어 이동
-- 카메라 추적
-- 필드 적
-- A 메뉴
-- 저장
-- Battle 진입/복귀
+- 일반 탐험
+- 집/외부 RoomTransition
+- NPC / Dialogue / Story Event
+- Z Main Menu
+- 통화 저장
+- Inventory / 장착 상태
+- 필드 적 및 Battle 진입
 
 ### BattleScene
 
-- EnemyData / SkillData 기반 전투
-- 커맨드/스킬 선택
-- 승리/도망/게임오버
-- 전투 배경/스킬 이펙트
+현재 전투 진입 구조를 다시 분석하기 전까지 기존 `BATTLE_SYSTEM.md`를 안전선으로만 사용한다.
 
-## 4. 입력 규칙
+Battle 관련 수정 전에는 실제 `EnemyController`, `BattleTransitionEffect`, `GameManager`, `BattleManager`, Inspector 연결을 다시 추적한다.
 
-```text
-방향키 = 이동 / UI 선택
-C       = 확인 / 결정 / 진행
-X       = 취소 / 뒤로가기
-A       = 필드 메뉴
-```
+## 10. 데이터 구조
 
-현재 직접 `Input.GetKeyDown()` 방식이 여러 스크립트에 남아 있다. 입력은 통일됐지만 중앙 GameInput 계층은 아직 도입하지 않았다.
+### ItemData / Inventory
 
-## 5. 카메라 기준
+GameManager는 InventoryEntry 목록과 장착 무기 ID를 관리한다.
 
-`CameraFollow` 공용 스크립트에 다음 기능이 존재한다.
+- Add / Remove / Has / Count
+- Equip / Unequip
+- effective attack / defense 계산
 
-- 일반 smooth follow
-- `instantFollow`
-- `followX`
-- `followY`
-- `SnapToTarget()`
+아이템 지급 이벤트는 `GiveItem` Step을 사용한다.
 
-프로젝트 공통 방향:
+### EnemyData / SkillData
 
-- 일반 탐험 중 플레이어를 따라갈 때는 불필요한 지연 없이 붙는 카메라를 선호.
-- 특수 연출에서만 smooth catch-up / focus tween을 사용.
-- 카메라 GameObject나 Camera 컴포넌트를 끄지 않고, Follow 컴포넌트만 필요에 따라 enable/disable.
+전투 원본 데이터.
 
-## 6. Fade 기준
+Battle 진입 구조는 별도 분석 후 정리한다.
 
-Scene별 Fade 구현은 아직 완전히 하나의 공용 시스템으로 합치지 않았다.
+## 11. Audio 구조
 
-Forest:
+### BGMManager
 
-- `NightOverlay`: 분위기 전용
-- `FadeOverlay`: 암전 전용
+Town BGM 관리.
 
-Battle/Title/Town은 기존 각 시스템을 유지한다.
+- Play / Stop
+- Pause
+- Resume
+- Resume with Fade
+- Fade Out
 
-성급하게 전역 FadeManager로 합치지 않는다. 실제 중복과 요구가 충분히 쌓인 뒤 통합한다.
-
-## 7. 데이터 구조
-
-### EnemyData
-
-적 원본 데이터 ScriptableObject.
-
-필드 EnemyController가 자기 EnemyData를 가지고 Battle 진입 시 GameManager에 전달한다.
-
-### SkillData
-
-스킬 원본 데이터 ScriptableObject.
-
-- 스킬 이름/ID
-- MP 비용
-- 타입/대상/속성
-- 위력
-- effectPrefab
-- SFX
-- effectDuration 등
-
-## 8. BGM 구조
-
-Town:
+저장완료 징글처럼 Dialogue Line End Sound가 재생될 때:
 
 ```text
-BGMManager (DontDestroyOnLoad)
-Battle 진입 → PauseBGM
-Town 복귀 → ResumeBGM
+텍스트 출력 완료
+→ BGM Pause
+→ Line End Sound 재생
+→ 입력 잠금
+→ Sound 종료
+→ BGM Resume + Fade-in
 ```
 
-Battle:
+### SFXManager
 
-- `Battle_BGM`은 독립 AudioSource.
-- Town용 BGMManager를 붙이지 않는다.
+공용 2D SFX AudioSource를 사용한다.
 
-Forest:
+- Reaction SFX
+- 메뉴 Cursor 이동음
+- Choice Select 이동음
+- 기타 일반 효과음
 
-- Forest 전용 BGM/효과음 AudioSource.
-- 이름 확정 → BGM volume 0으로 Fade 후 TitleScene.
+`PlayOneShot(AudioClip, volumeScale)`로 특정 클립만 볼륨을 조절할 수 있다.
 
-## 9. 외부 패키지
+캐릭터 타자음은 Dialogue 전용 AudioSource 흐름을 유지한다.
 
-### DOTween / DOTween Pro
+## 12. Fade 기준
 
-설치/Setup 완료.
+Fade는 아직 하나의 전역 서비스로 통합하지 않는다.
 
-현재 사용 예:
+- Forest: Forest 전용 FadeOverlay
+- Town: TownEventCanvas/FadeOverlay 및 각 이벤트의 Context
+- QuitGame: GameEventRunner의 Quit Fade Overlay
+- Battle: 기존 Battle Fade
 
-- Forest 맵 Fade
-- 카메라 Focus
-- RedSign alpha
-- Audio Fade
-- Reaction icon pop
-- Camera zone 복귀 연출
+동작 중인 Fade를 이유 없이 공통 Manager로 재설계하지 않는다.
 
-기존 Coroutine을 모두 DOTween으로 바꾸지 않는다. 연속적인 위치/알파/볼륨 변화에만 사용한다.
-
-## 10. 문서 책임
+## 13. 문서 책임
 
 - `STARTUP_FLOW.md` — Forest/Title/첫 실행
-- `FIELD_SYSTEMS.md` — 플레이어/카메라/Town/적/메뉴
-- `BATTLE_SYSTEM.md` — 전투
-- `SAVE_AND_STATE.md` — GameManager/Save
+- `FIELD_SYSTEMS.md` — Town Player/NPC/Dialogue/Event/Menu
+- `BATTLE_SYSTEM.md` — 전투 (실제 구현 재분석 전 안전선)
+- `SAVE_AND_STATE.md` — GameManager/Save/StoryFlag/Inventory
 - `RISK_REGISTER.md` — 위험한 레거시/정리 후보

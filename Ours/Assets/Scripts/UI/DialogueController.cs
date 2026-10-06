@@ -15,10 +15,12 @@ public class DialogueController : MonoBehaviour
 
     [Header("Basic")]
     [SerializeField] private TMP_Text basicDialogueText;
+    [SerializeField] private SlidingTypewriterText basicSlidingText;
 
     [Header("Portrait")]
     [SerializeField] private GameObject portraitPanel;
     [SerializeField] private TMP_Text portraitDialogueText;
+    [SerializeField] private SlidingTypewriterText portraitSlidingText;
     [SerializeField] private TMP_Text speakerNameText;
     [SerializeField] private Image portraitImage;
     [SerializeField] private Image portraitBackground;
@@ -38,13 +40,31 @@ public class DialogueController : MonoBehaviour
     private int currentPageLastCharacterIndex = -1;
     private int soundCharacterCounter;
     private TMP_Text currentDialogueText;
+    private SlidingTypewriterText currentSlidingText;
+    private string currentFullText = string.Empty;
+    private bool continueToNextLine;
     private AudioClip currentTypewriterSoundOverride;
     private bool currentInstantText;
+    private AudioClip pendingLineEndSound;
+    private float pendingLineEndSoundVolume = 1f;
+    private bool pendingWaitForLineEndSound;
+    private bool pendingPauseBgmDuringLineEndSound;
+    private float pendingBgmResumeFadeDuration = 1f;
+    private AudioClip currentLineEndSound;
+    private float currentLineEndSoundVolume = 1f;
+    private bool currentWaitForLineEndSound;
+    private bool currentPauseBgmDuringLineEndSound;
+    private float currentBgmResumeFadeDuration = 1f;
+    private bool lineEndSoundStarted;
+    private bool lineEndSoundBlockingInput;
+    private Coroutine lineEndSoundCoroutine;
 
     public bool IsOpen { get; private set; }
 
     private void Awake()
     {
+        ResetSlidingTexts();
+
         if (dialogueUI != null)
         {
             dialogueUI.SetActive(false);
@@ -86,6 +106,25 @@ public class DialogueController : MonoBehaviour
         SetBasicLayout();
         TMP_Text targetText = basicDialogueText != null ? basicDialogueText : dialogueText;
         Open(text, targetText, null, instantText: true, onClosed);
+    }
+
+    public void ConfigureLineEndSound(
+        AudioClip sound,
+        float volumeScale,
+        bool waitForSound,
+        bool pauseBgm,
+        float bgmResumeFadeDuration)
+    {
+        pendingLineEndSound = sound;
+        pendingLineEndSoundVolume = Mathf.Clamp01(volumeScale);
+        pendingWaitForLineEndSound = waitForSound;
+        pendingPauseBgmDuringLineEndSound = pauseBgm;
+        pendingBgmResumeFadeDuration = Mathf.Max(0f, bgmResumeFadeDuration);
+    }
+
+    public void SetContinueToNextLine(bool shouldContinue)
+    {
+        continueToNextLine = shouldContinue;
     }
 
     public void ShowPortrait(
@@ -179,19 +218,40 @@ public class DialogueController : MonoBehaviour
         Action callback = onClosed;
         onClosed = null;
 
+        bool preserveTextForNextLine = continueToNextLine;
+        continueToNextLine = false;
         IsOpen = false;
         StopTypewriter();
-        ResetVisibleCharacters();
-        ClearPortraitState();
+        StopLineEndSoundWait();
 
-        if (dialogueUI != null)
+        if (!preserveTextForNextLine)
         {
-            dialogueUI.SetActive(false);
+            ResetVisibleCharacters();
+            ResetSlidingTexts();
+            ClearPortraitState();
+
+            if (dialogueUI != null)
+            {
+                dialogueUI.SetActive(false);
+            }
         }
 
         currentDialogueText = null;
+        if (!preserveTextForNextLine)
+        {
+            currentSlidingText = null;
+        }
+
+        currentFullText = string.Empty;
         currentTypewriterSoundOverride = null;
         currentInstantText = false;
+        currentLineEndSound = null;
+        currentLineEndSoundVolume = 1f;
+        currentWaitForLineEndSound = false;
+        currentPauseBgmDuringLineEndSound = false;
+        currentBgmResumeFadeDuration = 1f;
+        lineEndSoundStarted = false;
+        lineEndSoundBlockingInput = false;
 
         callback?.Invoke();
     }
@@ -199,21 +259,39 @@ public class DialogueController : MonoBehaviour
     private void Open(string text, TMP_Text targetText, AudioClip typewriterSoundOverride, bool instantText, Action onClosed)
     {
         this.onClosed = onClosed;
+        SlidingTypewriterText targetSlidingText = ResolveSlidingText(targetText);
+        if (currentSlidingText != null && currentSlidingText != targetSlidingText)
+        {
+            currentSlidingText.ResetState(true);
+        }
+
+        currentSlidingText = targetSlidingText;
         currentDialogueText = targetText;
+        currentFullText = text ?? string.Empty;
         currentTypewriterSoundOverride = typewriterSoundOverride;
         currentInstantText = instantText;
+        currentLineEndSound = pendingLineEndSound;
+        currentLineEndSoundVolume = pendingLineEndSoundVolume;
+        currentWaitForLineEndSound = pendingWaitForLineEndSound;
+        currentPauseBgmDuringLineEndSound = pendingPauseBgmDuringLineEndSound;
+        currentBgmResumeFadeDuration = pendingBgmResumeFadeDuration;
+        ClearPendingLineEndSound();
+        lineEndSoundStarted = false;
+        lineEndSoundBlockingInput = false;
         openedFrame = Time.frameCount;
         IsOpen = true;
-
-        if (currentDialogueText != null)
-        {
-            currentDialogueText.text = text;
-        }
 
         if (dialogueUI != null)
         {
             dialogueUI.SetActive(true);
             Canvas.ForceUpdateCanvases();
+        }
+
+        // 비활성 DialogueUI 아래의 SlidingTypewriterText는 최초 활성화 시 Awake에서
+        // Text를 초기화하므로, UI 초기화가 끝난 뒤 첫 문장을 설정해야 한다.
+        if (currentDialogueText != null && currentSlidingText == null)
+        {
+            currentDialogueText.text = currentFullText;
         }
 
         if (currentDialogueText != null)
@@ -300,15 +378,27 @@ public class DialogueController : MonoBehaviour
             return;
         }
 
-        if (isTyping)
+        if (lineEndSoundBlockingInput)
+        {
+            return;
+        }
+
+        if (IsCurrentTextTyping())
         {
             CompleteCurrentPage();
             return;
         }
 
+        if (currentSlidingText != null && currentSlidingText.IsSliding)
+        {
+            return;
+        }
+
         TMP_Text activeText = currentDialogueText;
-        TMP_TextInfo textInfo = PrepareTextInfo(activeText);
-        if (textInfo != null && activeText.pageToDisplay < GetPreparedPageCount(textInfo))
+        int pageCount = currentSlidingText != null
+            ? currentSlidingText.PageCount
+            : GetPreparedPageCount(PrepareTextInfo(activeText));
+        if (activeText.pageToDisplay < pageCount)
         {
             StartPage(activeText.pageToDisplay + 1);
             return;
@@ -325,6 +415,31 @@ public class DialogueController : MonoBehaviour
         }
 
         StopTypewriter();
+
+        if (currentSlidingText != null)
+        {
+            pageStartedFrame = Time.frameCount;
+            soundCharacterCounter = 0;
+            currentDialogueText = currentSlidingText.Play(
+                currentFullText,
+                pageNumber,
+                currentInstantText,
+                PlayTypewriterSoundIfNeeded,
+                () =>
+                {
+                    isTyping = false;
+                    TryPlayLineEndSoundIfReady();
+                });
+
+            if (currentDialogueText == null)
+            {
+                return;
+            }
+
+            currentPageLastCharacterIndex = currentSlidingText.LastCharacterIndex;
+            isTyping = currentSlidingText.IsTyping;
+            return;
+        }
 
         currentDialogueText.pageToDisplay = Mathf.Max(1, pageNumber);
         TMP_TextInfo textInfo = PrepareTextInfo(currentDialogueText);
@@ -359,6 +474,7 @@ public class DialogueController : MonoBehaviour
             currentDialogueText.maxVisibleCharacters = lastCharacterIndex + 1;
             isTyping = false;
             typewriterCoroutine = null;
+            TryPlayLineEndSoundIfReady();
             return;
         }
 
@@ -461,10 +577,18 @@ public class DialogueController : MonoBehaviour
 
         isTyping = false;
         typewriterCoroutine = null;
+        TryPlayLineEndSoundIfReady();
     }
 
     private void CompleteCurrentPage()
     {
+        if (currentSlidingText != null)
+        {
+            currentSlidingText.CompleteTyping();
+            isTyping = false;
+            return;
+        }
+
         StopTypewriter();
         isTyping = false;
 
@@ -472,10 +596,17 @@ public class DialogueController : MonoBehaviour
         {
             currentDialogueText.maxVisibleCharacters = currentPageLastCharacterIndex + 1;
         }
+
+        TryPlayLineEndSoundIfReady();
     }
 
     private void StopTypewriter()
     {
+        if (currentSlidingText != null)
+        {
+            currentSlidingText.CancelTyping();
+        }
+
         if (typewriterCoroutine != null)
         {
             StopCoroutine(typewriterCoroutine);
@@ -483,6 +614,103 @@ public class DialogueController : MonoBehaviour
         }
 
         isTyping = false;
+    }
+
+    private void StopLineEndSoundWait()
+    {
+        if (lineEndSoundCoroutine != null)
+        {
+            StopCoroutine(lineEndSoundCoroutine);
+            lineEndSoundCoroutine = null;
+        }
+
+        if (lineEndSoundBlockingInput)
+        {
+            lineEndSoundBlockingInput = false;
+            ResumeBgmAfterLineEndSoundIfNeeded();
+        }
+    }
+
+    private void TryPlayLineEndSoundIfReady()
+    {
+        if (lineEndSoundStarted || currentLineEndSound == null || currentDialogueText == null)
+        {
+            return;
+        }
+
+        if (!IsCurrentPageLastPage())
+        {
+            return;
+        }
+
+        lineEndSoundStarted = true;
+
+        if (currentPauseBgmDuringLineEndSound && BGMManager.Instance != null)
+        {
+            BGMManager.Instance.PauseBGM();
+        }
+
+        if (SFXManager.Instance != null)
+        {
+            SFXManager.Instance.PlayOneShot(currentLineEndSound, currentLineEndSoundVolume);
+        }
+
+        if (currentWaitForLineEndSound)
+        {
+            lineEndSoundCoroutine = StartCoroutine(LineEndSoundRoutine(currentLineEndSound.length));
+            return;
+        }
+
+        ResumeBgmAfterLineEndSoundIfNeeded();
+    }
+
+    private IEnumerator LineEndSoundRoutine(float soundLength)
+    {
+        lineEndSoundBlockingInput = true;
+
+        float wait = Mathf.Max(0f, soundLength);
+        if (wait > 0f)
+        {
+            yield return new WaitForSeconds(wait);
+        }
+
+        lineEndSoundBlockingInput = false;
+        lineEndSoundCoroutine = null;
+        ResumeBgmAfterLineEndSoundIfNeeded();
+    }
+
+    private void ResumeBgmAfterLineEndSoundIfNeeded()
+    {
+        if (currentPauseBgmDuringLineEndSound && BGMManager.Instance != null)
+        {
+            BGMManager.Instance.ResumeBGMWithFade(currentBgmResumeFadeDuration);
+        }
+    }
+
+    private bool IsCurrentPageLastPage()
+    {
+        if (currentDialogueText == null)
+        {
+            return false;
+        }
+
+        if (currentSlidingText != null)
+        {
+            return currentSlidingText.CurrentPage >= currentSlidingText.PageCount;
+        }
+
+        TMP_TextInfo textInfo = PrepareTextInfo(currentDialogueText);
+        return textInfo == null ||
+               currentDialogueText.pageToDisplay >= GetPreparedPageCount(textInfo);
+    }
+
+    private void ClearPendingLineEndSound()
+    {
+        pendingLineEndSound = null;
+        pendingLineEndSoundVolume = 1f;
+        pendingWaitForLineEndSound = false;
+        pendingPauseBgmDuringLineEndSound = false;
+        pendingBgmResumeFadeDuration = 1f;
     }
 
     private void ResetVisibleCharacters()
@@ -500,6 +728,52 @@ public class DialogueController : MonoBehaviour
         if (portraitDialogueText != null)
         {
             portraitDialogueText.maxVisibleCharacters = int.MaxValue;
+        }
+    }
+
+    private bool IsCurrentTextTyping()
+    {
+        return currentSlidingText != null
+            ? currentSlidingText.IsTyping
+            : isTyping;
+    }
+
+    private SlidingTypewriterText ResolveSlidingText(TMP_Text targetText)
+    {
+        if (targetText == portraitDialogueText)
+        {
+            return portraitSlidingText != null
+                ? portraitSlidingText
+                : FindSlidingTextInParents(targetText);
+        }
+
+        if (targetText == basicDialogueText || targetText == dialogueText)
+        {
+            return basicSlidingText != null
+                ? basicSlidingText
+                : FindSlidingTextInParents(targetText);
+        }
+
+        return null;
+    }
+
+    private SlidingTypewriterText FindSlidingTextInParents(TMP_Text targetText)
+    {
+        return targetText != null
+            ? targetText.GetComponentInParent<SlidingTypewriterText>(true)
+            : null;
+    }
+
+    private void ResetSlidingTexts()
+    {
+        if (basicSlidingText != null)
+        {
+            basicSlidingText.ResetState(true);
+        }
+
+        if (portraitSlidingText != null && portraitSlidingText != basicSlidingText)
+        {
+            portraitSlidingText.ResetState(true);
         }
     }
 

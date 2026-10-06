@@ -251,12 +251,16 @@ public class EnemyController : MonoBehaviour
         }
 
         GameManager.Instance.currentBattleEnemy = enemyData;
-        GameManager.Instance.returnSceneName = SceneManager.GetActiveScene().name;
-        GameManager.Instance.returnPlayerPosition = player.position;
         GameManager.Instance.currentBattleEnemyId = encounterId;
 
-        // PlayerLoader가 playerPosition을 사용하므로 같이 저장
-        GameManager.Instance.playerPosition = player.position;
+        PlayerController playerController = player.GetComponentInParent<PlayerController>();
+        Vector2 returnFacing = playerController != null
+            ? playerController.GetFacingDirection()
+            : GameManager.Instance.playerFacingDirection;
+        GameManager.Instance.RequestBattleReturn(
+            SceneManager.GetActiveScene().name,
+            player.position,
+            returnFacing);
 
         if (battleEffect != null)
         {
@@ -266,6 +270,7 @@ public class EnemyController : MonoBehaviour
         else
         {
             Debug.LogWarning("EnemyController: BattleTransitionEffect가 없어 바로 BattleScene으로 이동합니다.");
+            BattleTransitionEffect.BeginTransition();
             SceneManager.LoadScene(battleSceneName);
         }
     }

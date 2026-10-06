@@ -12,8 +12,10 @@ public enum StartupSessionState
 
 public class GameManager : MonoBehaviour
 {
-    public const string PKHealSkillId = "pk_heal";
-    public const string PKThunderSkillId = "pk_thunder";
+    public const string ESPHealAlphaSkillId = "esp_heal_alpha";
+    public const string ESPThunderAlphaSkillId = "esp_thunder_alpha";
+    private const string LegacyPKHealSkillId = "pk_heal";
+    private const string LegacyPKHealAlphaSkillId = "pk_heal_alpha";
     public const string TitleSceneName = "TitleScene";
     public const string ForestSceneName = "ForestScene";
     public const string TownSceneName = "TownScene";
@@ -23,11 +25,14 @@ public class GameManager : MonoBehaviour
     public EnemyData currentBattleEnemy;     // currentBattleEnemy = 이번 전투에서 싸울 적
     public string returnSceneName;          //returnSceneName = 전투 끝나고 돌아갈 씬
     public Vector2 returnPlayerPosition;    //returnPlayerPosition = 전투 끝나고 돌아갈 위치
+    private Vector2 returnPlayerFacingDirection = Vector2.right;
+    private bool battleReturnRequested;
 
     [Header("Battle Runtime Data")]
     public string currentBattleEnemyId; // currentBattleEnemyId = 이번 전투에서 싸울 적의 ID (EnemyData에서 가져옴)
     public string escapedEnemyId;   // escapedEnemyId = 도망친뒤의 적의 ID (EnemyData에서 가져옴)
     public string defeatedEnemyId;
+    public string victoryStoryFlag;
     [FormerlySerializedAs("fadeInOnMainSceneLoad")]
     public bool fadeInOnTownSceneLoad;
 
@@ -49,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public int exp;
     public int gold;
+    public int pendingGold;
 
 
     public string currentSceneName;
@@ -57,6 +63,7 @@ public class GameManager : MonoBehaviour
     public StartupSessionState startupSessionState = StartupSessionState.None;
     public string pendingPlayerName = "";
     private bool townOpeningRequested;
+    private bool savedPlayerRestoreRequested;
 
     public bool introPlayed;
     public bool ratBossDefeated;
@@ -92,6 +99,7 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            MigrateLegacyLearnedSkillIds();
         }
         else
         {
@@ -132,21 +140,25 @@ public class GameManager : MonoBehaviour
         luck = 3;
 
         gold = 0;
+        pendingGold = 0;
 
         currentSceneName = TownSceneName;
         playerPosition = Vector2.zero;
         playerFacingDirection = Vector2.right;
+        savedPlayerRestoreRequested = false;
         currentBattleEnemy = null;
-        returnSceneName = "";
+        ClearBattleReturnRequest();
         currentBattleEnemyId = "";
         escapedEnemyId = "";
         defeatedEnemyId = "";
+        victoryStoryFlag = "";
         fadeInOnTownSceneLoad = false;
 
         introPlayed = false;
         ratBossDefeated = false;
 
         learnedSkillIds = new List<string>();
+        LearnSkill(ESPHealAlphaSkillId);
         inventoryItems = new List<InventoryEntry>();
         equippedWeaponItemId = "";
         storyFlags = new List<string>();
@@ -154,6 +166,8 @@ public class GameManager : MonoBehaviour
 
     public SaveData GetSaveData()
     {
+        MigrateLegacyLearnedSkillIds();
+
         SaveData data = new SaveData();
 
         data.playerName = playerName;
@@ -170,6 +184,7 @@ public class GameManager : MonoBehaviour
         data.speed = speed;
         data.luck = luck;
         data.gold = gold;
+        data.pendingGold = pendingGold;
 
         data.currentSceneName = NormalizeSceneName(currentSceneName);
 
@@ -193,6 +208,8 @@ public class GameManager : MonoBehaviour
     }
     public void LoadFromSaveData(SaveData data)
     {
+        ClearBattleReturnRequest();
+
         playerName = data.playerName;
         currentHP = data.currentHP;
         maxHP = data.maxHP;
@@ -207,18 +224,13 @@ public class GameManager : MonoBehaviour
         speed = data.speed;
         luck = data.luck;
         gold = data.gold;
+        pendingGold = Mathf.Max(0, data.pendingGold);
 
         currentSceneName = NormalizeSceneName(data.currentSceneName);
         playerPosition = new Vector2(data.playerPosX, data.playerPosY);
-        playerFacingDirection = new Vector2(data.playerFacingDirX, data.playerFacingDirY);
-        if (playerFacingDirection.sqrMagnitude < 0.0001f)
-        {
-            playerFacingDirection = Vector2.down;
-        }
-        else
-        {
-            playerFacingDirection.Normalize();
-        }
+        playerFacingDirection = NormalizePlayerFacingDirection(
+            new Vector2(data.playerFacingDirX, data.playerFacingDirY));
+        savedPlayerRestoreRequested = true;
 
         introPlayed = data.introPlayed;
         ratBossDefeated = data.ratBossDefeated;
@@ -226,6 +238,9 @@ public class GameManager : MonoBehaviour
         learnedSkillIds = data.learnedSkillIds != null
             ? new List<string>(data.learnedSkillIds)
             : new List<string>();
+
+        MigrateLegacyLearnedSkillIds();
+
         inventoryItems = CloneInventory(data.inventoryItems);
         equippedWeaponItemId = data.equippedWeaponItemId ?? "";
 
@@ -237,10 +252,48 @@ public class GameManager : MonoBehaviour
             ? new List<string>(data.storyFlags)
             : new List<string>();
 
+        if (level >= 1)
+        {
+            LearnSkill(ESPHealAlphaSkillId);
+        }
+
         if (level >= 2)
         {
-            LearnSkill(PKHealSkillId);
-            LearnSkill(PKThunderSkillId);
+            LearnSkill(ESPThunderAlphaSkillId);
+        }
+    }
+
+    public void AddPendingGold(int amount)
+    {
+        if (amount > 0)
+        {
+            pendingGold += amount;
+        }
+    }
+
+    public int DepositPendingGold()
+    {
+        int depositedGold = Mathf.Max(0, pendingGold);
+        gold += depositedGold;
+        pendingGold = 0;
+        return depositedGold;
+    }
+
+    private void MigrateLegacyLearnedSkillIds()
+    {
+        if (learnedSkillIds == null)
+        {
+            learnedSkillIds = new List<string>();
+            return;
+        }
+
+        int removedCount = learnedSkillIds.RemoveAll(
+            skillId => skillId == LegacyPKHealSkillId ||
+                       skillId == LegacyPKHealAlphaSkillId);
+
+        if (removedCount > 0)
+        {
+            LearnSkill(ESPHealAlphaSkillId);
         }
     }
 
@@ -270,6 +323,26 @@ public class GameManager : MonoBehaviour
         }
 
         return learnedSkillIds.Contains(skillId);
+    }
+
+    public void ApplyHelloLevelUpGrowth()
+    {
+        maxHP += RollInclusive(5, 7);
+        maxMP += RollInclusive(2, 3);
+        attack += RollInclusive(2, 4);
+        defense += RollInclusive(2, 3);
+        magicAttack += RollInclusive(2, 3);
+        magicDefense += RollInclusive(2, 3);
+        speed += RollInclusive(2, 3);
+        luck += RollInclusive(1, 2);
+
+        currentHP = maxHP;
+        currentMP = maxMP;
+    }
+
+    private static int RollInclusive(int minInclusive, int maxInclusive)
+    {
+        return Random.Range(minInclusive, maxInclusive + 1);
     }
 
     public bool HasStoryFlag(string flagId)
@@ -550,6 +623,66 @@ public class GameManager : MonoBehaviour
         pendingPlayerName = "";
     }
 
+    public bool ConsumeSavedPlayerRestoreRequest()
+    {
+        if (!savedPlayerRestoreRequested)
+        {
+            return false;
+        }
+
+        savedPlayerRestoreRequested = false;
+        return true;
+    }
+
+    public void RequestBattleReturn(
+        string sceneName,
+        Vector2 position,
+        Vector2 facingDirection)
+    {
+        returnSceneName = NormalizeSceneName(sceneName);
+        returnPlayerPosition = position;
+        returnPlayerFacingDirection = NormalizePlayerFacingDirection(facingDirection);
+        playerPosition = position;
+        playerFacingDirection = returnPlayerFacingDirection;
+        battleReturnRequested = true;
+        savedPlayerRestoreRequested = false;
+    }
+
+    public bool TryConsumeBattleReturnRequest(
+        string loadedSceneName,
+        out Vector2 position,
+        out Vector2 facingDirection)
+    {
+        position = Vector2.zero;
+        facingDirection = Vector2.right;
+
+        if (!battleReturnRequested ||
+            NormalizeSceneName(returnSceneName) != NormalizeSceneName(loadedSceneName))
+        {
+            return false;
+        }
+
+        position = returnPlayerPosition;
+        facingDirection = returnPlayerFacingDirection;
+        playerPosition = position;
+        playerFacingDirection = facingDirection;
+
+        battleReturnRequested = false;
+        savedPlayerRestoreRequested = false;
+        returnSceneName = "";
+        returnPlayerPosition = Vector2.zero;
+        returnPlayerFacingDirection = Vector2.right;
+        return true;
+    }
+
+    private void ClearBattleReturnRequest()
+    {
+        battleReturnRequested = false;
+        returnSceneName = "";
+        returnPlayerPosition = Vector2.zero;
+        returnPlayerFacingDirection = Vector2.right;
+    }
+
     public void RequestTownOpening()
     {
         townOpeningRequested = true;
@@ -589,5 +722,22 @@ public class GameManager : MonoBehaviour
         }
 
         return sceneName;
+    }
+
+    private static Vector2 NormalizePlayerFacingDirection(Vector2 direction)
+    {
+        if (float.IsNaN(direction.x) || float.IsNaN(direction.y) ||
+            float.IsInfinity(direction.x) || float.IsInfinity(direction.y) ||
+            direction.sqrMagnitude < 0.0001f)
+        {
+            return Vector2.right;
+        }
+
+        if (Mathf.Abs(direction.x) >= Mathf.Abs(direction.y))
+        {
+            return direction.x < 0f ? Vector2.left : Vector2.right;
+        }
+
+        return direction.y < 0f ? Vector2.down : Vector2.up;
     }
 }

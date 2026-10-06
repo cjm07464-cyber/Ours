@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.SceneManagement;
 public class SaveSystem
 {
     private static string savePath = Application.persistentDataPath + "/savefile.json";
@@ -35,6 +36,8 @@ public class SaveSystem
             return;
         }
 
+        CaptureCurrentWorldState();
+
         SaveData data = GameManager.Instance.GetSaveData();
         string json = JsonUtility.ToJson(data, true);
 
@@ -42,6 +45,41 @@ public class SaveSystem
 
         Debug.Log("저장 완료: " + savePath);
     }
+
+    private static void CaptureCurrentWorldState()
+    {
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager == null)
+        {
+            return;
+        }
+
+        gameManager.currentSceneName = GameManager.NormalizeSceneName(SceneManager.GetActiveScene().name);
+
+        GameObject playerObject = null;
+        try
+        {
+            playerObject = GameObject.FindGameObjectWithTag("Player");
+        }
+        catch (UnityException)
+        {
+            playerObject = null;
+        }
+
+        if (playerObject == null)
+        {
+            return;
+        }
+
+        gameManager.playerPosition = playerObject.transform.position;
+
+        PlayerController playerController = playerObject.GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            gameManager.playerFacingDirection = playerController.GetFacingDirection();
+        }
+    }
+
     public static void LoadGame()
     {
         if (!HasSaveData())

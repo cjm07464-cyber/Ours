@@ -8,6 +8,7 @@ public class BGMManager : MonoBehaviour
     public static BGMManager Instance;
     AudioSource audioSrc;
     Tween resumeFadeTween;
+    Tween fadeOutTween;
     float volumeBeforePause = 1f;
 
     void Awake()
@@ -108,8 +109,40 @@ public class BGMManager : MonoBehaviour
         StartCoroutine(FadeOutRoutine(speed));
     }
 
+    public Tween FadeOutOverDuration(float duration)
+    {
+        if (audioSrc == null)
+        {
+            return null;
+        }
+
+        resumeFadeTween?.Kill();
+        fadeOutTween?.Kill();
+
+        float safeDuration = Mathf.Max(0f, duration);
+        if (safeDuration <= 0f)
+        {
+            audioSrc.volume = 0f;
+            audioSrc.Stop();
+            return null;
+        }
+
+        fadeOutTween = audioSrc
+            .DOFade(0f, safeDuration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                audioSrc.Stop();
+                fadeOutTween = null;
+            });
+
+        return fadeOutTween;
+    }
+
     IEnumerator FadeOutRoutine(float speed)
     {
+        fadeOutTween?.Kill();
+
         while (audioSrc.volume > 0)
         {
             audioSrc.volume -= Time.unscaledDeltaTime * speed;

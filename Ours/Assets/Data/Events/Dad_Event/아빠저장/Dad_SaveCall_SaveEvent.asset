@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a06d899ed50f75b459941103388e0bf6, type: 3}
+  m_Name: Dad_SaveCall_SaveEvent
+  m_EditorClassIdentifier: 
+  steps:
+  - stepType: 6
+    dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
+  - stepType: 0
+    dialogueSequence: {fileID: 11400000, guid: ed52bfc4b6cce3640baf1eb1cf161b2b, type: 2}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 0}
+    noEventSequence: {fileID: 0}
+  - stepType: 5
+    dialogueSequence: {fileID: 0}
+    messageText: 
+    messageSound: {fileID: 0}
+    pauseBgmWhileOpen: 0
+    bgmResumeFadeDuration: 0
+    itemId: 
+    count: 0
+    flagId: 
+    yesEventSequence: {fileID: 11400000, guid: 8663a78b42909b34a88c16fe6ddebed4, type: 2}
+    noEventSequence: {fileID: 11400000, guid: 66195b91ada584e449f3868963f575bc, type: 2}

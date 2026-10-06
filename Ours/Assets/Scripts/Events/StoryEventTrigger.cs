@@ -21,6 +21,7 @@ public class StoryEventTrigger : MonoBehaviour
             return;
         }
 
+        eventRunner?.SetPlayerController(other.GetComponentInParent<PlayerController>());
         RunEvent();
     }
 

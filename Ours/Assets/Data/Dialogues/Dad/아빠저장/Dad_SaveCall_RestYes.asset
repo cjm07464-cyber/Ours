@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f109b9e25dfa6cc49af9f5ccf437358c, type: 3}
+  m_Name: Dad_SaveCall_RestYes
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: fb5dda8eeb7bd154893356e9360e71d4, type: 2}
+    expressionId: 
+    text: "\uADF8\uB798. \uC544\uBE60\uB3C4 \uC774\uC81C \uC2AC\uC2AC \uC26C\uC5B4\uC57C\uACA0\uAD6C\uB098.\r\n\uC804\uC6D0\uC744
+      \uAEBC \uC904 \uD14C\uB2C8 \uB4E4\uC5B4\uAC00\uC11C \uC26C\uAE30\uB85C \uC544\uBE60\uB791
+      \uC57D\uC18D\uD55C\uAC70\uB2E4?"
+    showPortrait: 1
+    showSpeakerName: 1
+    lineStartSound: {fileID: 0}
+    instantText: 0
+  - speaker: {fileID: 0}
+    expressionId: 
+    text: ".......\uC091!"
+    showPortrait: 0
+    showSpeakerName: 0
+    lineStartSound: {fileID: 8300000, guid: 009db325fbc9d6c409104e703bf40f63, type: 3}
+    instantText: 1

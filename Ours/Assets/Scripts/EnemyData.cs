@@ -25,4 +25,13 @@ public class EnemyData : ScriptableObject
     [Header("Reward")]
     public int expReward;
     public int goldReward;
+
+    [Header("Phone Information")]
+    [TextArea(2, 4)] public string phoneWeaknessText;
+    [TextArea(2, 4)] public string phoneTriviaText;
+    [TextArea(2, 4)] public string phoneAdviceText;
+
+    [Header("Escape")]
+    public bool canEscape = true;
+    [TextArea(2, 4)] public string escapeBlockMessage;
 }
